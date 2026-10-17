@@ -79,7 +79,10 @@ const steps = [
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(app)} />
   <section class="hero">
     <div class="wrap">
-      <Themed class="hero-cat" name="/img/cat-reading" width={180} height={144} alt="The Nyanga cat reading a book" />
+      <button class="hero-cat" type="button" aria-label="Wake the cat up" data-wake>
+        <Themed class="sleepy" name="/img/cat-reading" width={180} height={144} alt="The Nyanga cat reading a book" />
+        <Themed class="happy" name="/img/cat-happy" width={180} height={144} />
+      </button>
       <h1>
         Nyanga
         <svg class="squiggle" viewBox="0 0 220 18" preserveAspectRatio="none" aria-hidden="true">
@@ -151,9 +154,36 @@ const steps = [
   </section>
 </Base>
 
+<script>
+  // The sleepy cat wakes up when tapped, then goes back to its book.
+  const cat = document.querySelector<HTMLButtonElement>("[data-wake]");
+  let nap: ReturnType<typeof setTimeout> | undefined;
+  cat?.addEventListener("click", () => {
+    cat.classList.remove("awake");
+    void cat.offsetWidth; // restart the hop on every tap
+    cat.classList.add("awake");
+    cat.setAttribute("aria-label", "The cat is awake and happy");
+    clearTimeout(nap);
+    nap = setTimeout(() => {
+      cat.classList.remove("awake");
+      cat.setAttribute("aria-label", "Wake the cat up");
+    }, 2800);
+  });
+</script>
+
 <style>
   .hero { padding: 40px 0 16px; text-align: center; }
-  .hero :global(.hero-cat) { display: block; width: fit-content; margin: 0 auto -4px; }
+  /* Tap the sleepy cat and it wakes up happy for a moment (both pictures are stacked). */
+  .hero-cat { position: relative; display: block; width: 180px; height: 144px; margin: 0 auto -4px; padding: 0; border: 0; border-radius: 24px; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .hero-cat:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+  .hero-cat :global(picture) { position: absolute; inset: 0; transition: opacity 0.2s ease; }
+  .hero-cat :global(.happy), .hero-cat.awake :global(.sleepy) { opacity: 0; }
+  .hero-cat.awake :global(.happy) { opacity: 1; }
+  .hero-cat.awake { animation: hop 0.45s ease-out; }
+  @keyframes hop { 40% { transform: translateY(-14px) scale(1.04); } 70% { transform: translateY(2px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cat.awake { animation: none; }
+  }
   h1 { position: relative; display: inline-block; font-size: clamp(52px, 10vw, 80px); color: var(--accent); letter-spacing: -0.5px; padding-bottom: 6px; }
   .squiggle { position: absolute; left: 4%; right: 4%; bottom: -2px; width: 92%; height: 16px; }
   .squiggle path { fill: none; stroke: var(--primary-a); stroke-width: 5; stroke-linecap: round; opacity: 0.75; }
