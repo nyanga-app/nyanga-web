@@ -28,7 +28,7 @@ DATA = Path(tempfile.mkdtemp())
 
 import paths  # noqa: E402
 
-paths.DATA = DATA
+paths.DATA = paths.CONFIG = DATA
 
 from PIL import Image  # noqa: E402
 from PySide6.QtCore import QBuffer, QEvent, QPoint, QPointF, QRect, QRectF, Qt  # noqa: E402
