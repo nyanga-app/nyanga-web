@@ -14,6 +14,9 @@ const {
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
 const card = new URL("/img/card.png", Astro.site);
+// Kept out of search results until the site has its own domain; switching `site` in
+// astro.config.mjs to that domain lets search engines in.
+const indexed = !Astro.site?.hostname.endsWith(".workers.dev");
 ---
 
 <!doctype html>
@@ -24,6 +27,7 @@ const card = new URL("/img/card.png", Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {!indexed && <meta name="robots" content="noindex" />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#ff7eb3" />
 

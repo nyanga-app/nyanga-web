@@ -78,6 +78,9 @@ Every page has a title and description, a canonical link and link-preview tags (
 the home page also tells search engines it's a free Windows app (JSON-LD). The sitemap and
 `robots.txt` are made by the build. All of it follows `site` in `astro.config.mjs`.
 
+While the site still lives on `workers.dev`, every page says `noindex`, so search engines
+leave it alone until it has a proper home. Pointing `site` at the real domain lifts it.
+
 When the site moves to its own domain: add it under the Cloudflare project's Domains &
 Routes, change `site` in `astro.config.mjs` (and the link at the top of this file), push, and
 add the new address in Google Search Console with its sitemap.
