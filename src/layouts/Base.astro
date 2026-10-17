@@ -1,0 +1,96 @@
+---
+import "../styles/global.css";
+import { REPO } from "../lib/releases";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Nyanga: a cute & cozy manga downloader",
+  description = "Nyanga is a free, pink Windows app that downloads manga and saves one file per volume: CBZ, PDF, EPUB or image folders.",
+} = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ff7eb3" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL("/img/icon.png", Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/Fredoka-600.ttf" as="font" type="font/ttf" crossorigin />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap bar">
+        <a class="brand" href="/">
+          <img src="/img/icon.svg" width="38" height="38" alt="" />
+          <span>Nyanga</span>
+        </a>
+        <nav>
+          <a href="/#features">Features</a>
+          <a href="/#install">Install</a>
+          <a href="/changelog/" aria-current={path.startsWith("/changelog") ? "page" : undefined}>What's new</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <div class="wrap">
+        <img src="/img/icon.svg" width="44" height="44" alt="" />
+        <p>Made with ♡ and a lot of cat naps.</p>
+        <p class="small">
+          <a href="/changelog/">What's new</a> · <a href={`https://github.com/${REPO}`}>Source on GitHub</a>{" · "}
+          <a href={`https://github.com/${REPO}/issues`}>Report a problem</a>
+        </p>
+        <p class="small muted">
+          Nyanga isn't affiliated with any manga site. Please support the creators of the manga you love ✿
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 22px; font-weight: 700; color: var(--accent); }
+  nav { display: flex; gap: 4px; }
+  nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  nav a:hover, nav a[aria-current="page"] { background: var(--chip); color: var(--accent); }
+  @media (max-width: 560px) {
+    nav a[href="/#features"] { display: none; }
+    nav a { padding: 6px 9px; font-size: 15px; }
+    .brand span { display: none; }
+  }
+
+  .foot { margin-top: 96px; padding: 40px 0 48px; border-top: 1px solid var(--border); background: var(--bg-soft); text-align: center; }
+  .foot p { margin: 6px 0; }
+  .small { font-size: 15px; }
+  .muted { color: var(--muted); }
+</style>

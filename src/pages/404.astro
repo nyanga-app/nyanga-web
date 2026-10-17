@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import Themed from "../components/Themed.astro";
+---
+
+<Base title="Lost? | Nyanga">
+  <section class="lost">
+    <div class="wrap">
+      <Themed name="/img/cat-reading" width={180} height={144} />
+      <h1>This page wandered off</h1>
+      <p>The cat looked everywhere, even under the couch ♡</p>
+      <a class="button" href="/">Back home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost { text-align: center; padding: 72px 0 24px; }
+  h1 { color: var(--accent); font-size: clamp(30px, 6vw, 44px); }
+  p { color: var(--muted); margin: 8px 0 28px; }
+</style>

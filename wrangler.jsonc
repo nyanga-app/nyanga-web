@@ -1,0 +1,9 @@
+// Cloudflare deploys the built site (dist/) as static files; unknown pages get our 404 page.
+{
+  "name": "nyanga-web",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

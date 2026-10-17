@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import DownloadButton from "../components/DownloadButton.astro";
+import Themed from "../components/Themed.astro";
+import { RELEASES_PAGE, formatDate, history } from "../lib/releases";
+
+const SECTIONS = { breaking: "Heads up: this works a bit differently", feat: "✧ New things", fix: "♡ Fixed", perf: "✿ Faster" };
+const releases = await history();
+---
+
+<Base title="What's new in Nyanga" description="Every Nyanga update, in plain words.">
+  <section class="head">
+    <div class="wrap">
+      <Themed name="/img/cat-happy" width={150} height={120} />
+      <h1>What's new ✧</h1>
+      <p>Every update so far, newest first. The app updates itself, so you always get these.</p>
+    </div>
+  </section>
+
+  <div class="wrap list">
+    {releases.length === 0 && (
+      <p class="empty card">
+        The notes couldn't be loaded right now. You can read them on the <a href={RELEASES_PAGE}>releases page</a>.
+      </p>
+    )}
+    {releases.map((r, i) => (
+      <article class="release">
+        <header>
+          <h2>Version {r.version}</h2>
+          {i === 0 && <span class="chip latest">latest</span>}
+          <time datetime={r.date}>{formatDate(r.date)}</time>
+        </header>
+        {(Object.keys(SECTIONS) as (keyof typeof SECTIONS)[]).map((kind) => {
+          const items = r.items.filter((it) => it.kind === kind);
+          return items.length > 0 && (
+            <section>
+              <h3>{SECTIONS[kind]}</h3>
+              <ul>
+                {items.map((it) => (
+                  <li class="card item">
+                    <div class="title">
+                      <span>{it.title}</span>
+                      {it.area && <span class="chip">{it.area}</span>}
+                    </div>
+                    {it.detail && <p>{it.detail}</p>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
+      </article>
+    ))}
+    <div class="again"><DownloadButton /></div>
+  </div>
+</Base>
+
+<style>
+  .head { text-align: center; padding: 40px 0 12px; }
+  .head h1 { font-size: clamp(36px, 7vw, 52px); color: var(--accent); }
+  .head p { color: var(--muted); margin: 6px auto 0; max-width: 520px; }
+  .list { max-width: 760px; }
+  .release { margin-top: 44px; }
+  .release header { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; padding-bottom: 8px; border-bottom: 2px dashed var(--border); }
+  .release h2 { font-size: 26px; text-align: left; }
+  .release time { color: var(--muted); font-size: 15px; margin-left: auto; }
+  .latest { background: linear-gradient(90deg, var(--primary-a), var(--primary-b)); color: #fff; font-weight: 600; }
+  .release h3 { font-size: 17px; color: var(--accent); margin: 20px 0 8px; }
+  .release ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .item { padding: 12px 16px; box-shadow: none; border-radius: 16px; }
+  .title { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; font-weight: 600; }
+  .item p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+  .empty { padding: 20px; text-align: center; margin-top: 32px; }
+  .again { margin-top: 56px; }
+</style>

@@ -1,0 +1,106 @@
+/* Colors come from the app's palettes in theme.py, so the site and the app match. */
+
+@font-face { font-family: "Fredoka"; font-weight: 400; font-display: swap; src: url("/fonts/Fredoka-400.ttf") format("truetype"); }
+@font-face { font-family: "Fredoka"; font-weight: 500; font-display: swap; src: url("/fonts/Fredoka-500.ttf") format("truetype"); }
+@font-face { font-family: "Fredoka"; font-weight: 600; font-display: swap; src: url("/fonts/Fredoka-600.ttf") format("truetype"); }
+@font-face { font-family: "Fredoka"; font-weight: 700; font-display: swap; src: url("/fonts/Fredoka-700.ttf") format("truetype"); }
+
+:root {
+  color-scheme: light;
+  --text: #5a2a41;
+  --muted: #a86b88;
+  --accent: #e0457f;
+  --accent-soft: #c2457a;
+  --bg: #fff0f6;
+  --bg-soft: #ffe3ef;
+  --card: #ffffff;
+  --border: #ffd6e7;
+  --chip: #ffe3ef;
+  --primary-a: #ff7eb3;
+  --primary-b: #ff5c9a;
+  --primary-hover: #ff4f90;
+  --shadow: 0 10px 30px rgba(255, 92, 154, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --text: #f6dbe8;
+    --muted: #c08aa5;
+    --accent: #ff8fbf;
+    --accent-soft: #ff9ec6;
+    --bg: #1d1420;
+    --bg-soft: #241a26;
+    --card: #291d2b;
+    --border: #3d2a3e;
+    --chip: #3a2338;
+    --primary-hover: #ff6fa6;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Fredoka", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+img { max-width: 100%; height: auto; }
+
+a { color: var(--accent); }
+a:hover { color: var(--accent-soft); }
+
+h1, h2, h3 { line-height: 1.2; margin: 0; }
+h2 { font-size: clamp(26px, 4vw, 34px); color: var(--accent); text-align: center; }
+
+.wrap { width: min(1080px, 100% - 32px); margin-inline: auto; }
+
+.section { padding: 72px 0 8px; }
+.section > .wrap > p.lead { text-align: center; color: var(--muted); margin: 10px auto 32px; max-width: 560px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+
+.chip {
+  display: inline-block;
+  background: var(--chip);
+  color: var(--accent-soft);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary-a), var(--primary-b));
+  color: #fff;
+  font-weight: 700;
+  font-size: 19px;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(255, 92, 154, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.button:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255, 92, 154, 0.45); }
+.button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .button { transition: none; }
+}

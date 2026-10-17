@@ -1,0 +1,20 @@
+---
+// A picture with a light and a dark version (`${name}-light.${ext}` / `-dark`); the browser
+// downloads only the one that matches the visitor's theme.
+interface Props {
+  name: string; // e.g. "/img/cat-reading"
+  ext?: string;
+  alt?: string;
+  width: number;
+  height: number;
+  class?: string;
+  lazy?: boolean;
+}
+
+const { name, ext = "webp", alt = "", width, height, class: cls, lazy = false } = Astro.props;
+---
+
+<picture class={cls}>
+  <source srcset={`${name}-dark.${ext}`} media="(prefers-color-scheme: dark)" />
+  <img src={`${name}-light.${ext}`} alt={alt} width={width} height={height} loading={lazy ? "lazy" : undefined} />
+</picture>
