@@ -37,16 +37,36 @@ interface GhRelease {
   assets: GhAsset[];
 }
 
-const headers: Record<string, string> = { Accept: "application/vnd.github+json" };
-if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+const API = `https://api.github.com/repos/${REPO}/releases?per_page=100`;
+const BASE = { Accept: "application/vnd.github+json", "User-Agent": "nyanga-web" };
 
 let cached: Promise<GhRelease[]> | undefined;
 
+async function fetchReleases(): Promise<GhRelease[]> {
+  let token = process.env.GITHUB_TOKEN?.trim();
+  try {
+    let res = await fetch(API, { headers: token ? { ...BASE, Authorization: `Bearer ${token}` } : BASE });
+    if (res.status === 401 && token) {
+      console.warn("[releases] GitHub rejected GITHUB_TOKEN (401); trying without it");
+      res = await fetch(API, { headers: BASE });
+      token = undefined;
+    }
+    if (!res.ok) {
+      console.warn(`[releases] GitHub said ${res.status}: ${(await res.text()).slice(0, 200)}`);
+      return [];
+    }
+    const found = (await res.json()) as GhRelease[];
+    console.log(`[releases] ${found.length} releases from GitHub${token ? " (with token)" : ""}`);
+    return found;
+  } catch (e) {
+    console.warn(`[releases] couldn't reach GitHub: ${e}`);
+    return [];
+  }
+}
+
 /** Every release, newest first; empty when GitHub can't be reached (the site still builds). */
 function releases(): Promise<GhRelease[]> {
-  cached ??= fetch(`https://api.github.com/repos/${REPO}/releases?per_page=100`, { headers })
-    .then((r) => (r.ok ? r.json() : []))
-    .catch(() => []);
+  cached ??= fetchReleases();
   return cached;
 }
 
