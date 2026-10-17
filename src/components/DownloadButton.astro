@@ -13,7 +13,7 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
       </svg>
-      Download for Windows ♡
+      Download for Windows
     </a>
     <p class="meta">{windowsMeta}</p>
     <p class="meta other">On Linux? <a data-linux href={release?.linux?.url ?? RELEASES_PAGE}>Get the AppImage</a></p>
@@ -23,7 +23,7 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
       </svg>
-      Download for Linux ♡
+      Download for Linux
     </a>
     <p class="meta">{linuxMeta}</p>
     <p class="meta other">On Windows? <a data-windows href={release?.url ?? RELEASES_PAGE}>Get the installer</a></p>

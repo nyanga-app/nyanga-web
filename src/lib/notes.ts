@@ -42,7 +42,7 @@ export interface GhRelease {
 export const SECTIONS: [Item["kind"], string][] = [
   ["breaking", "Heads up: this works a bit differently"],
   ["feat", "✧ New things"],
-  ["fix", "♡ Fixed"],
+  ["fix", "✓ Fixed"],
   ["perf", "✿ Faster"],
 ];
 

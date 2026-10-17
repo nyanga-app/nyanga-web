@@ -44,7 +44,7 @@ const releases = await history();
         box.innerHTML = releasesHtml(releases);
       })
       .catch(() => {
-        box.innerHTML = `<p class="waiting">The notes couldn't be loaded right now. They're also on the <a href="${RELEASES_PAGE}">releases page</a> ♡</p>`;
+        box.innerHTML = `<p class="waiting">The notes couldn't be loaded right now. They're also on the <a href="${RELEASES_PAGE}">releases page</a>.</p>`;
       });
   }
 </script>

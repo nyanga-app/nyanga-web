@@ -21,7 +21,7 @@
 
 ## ♡ What's on it
 
-- 🏠 **The home page**: a big pink **Download for Windows ♡** (or **for Linux ♡** on Linux,
+- 🏠 **The home page**: a big pink **Download for Windows** (or **for Linux** on Linux,
   picked by a tiny script in `Base.astro` before the page draws) button that always points at
   the newest installer or AppImage, with a small link to the other one under it. Then a peek at
   the app, what it does, the cats, and gentle install steps that walk you past the "Windows
@@ -68,7 +68,7 @@ quick. The pages live in `src/pages/`, the shared header and footer in `src/layo
 
 - **The icons** are the app's own (`src/lib/icons.ts`, used through `src/components/Icon.astro`),
   copied from `theme.py` by `../.venv/bin/python scripts/export_icons.py`. The site has no emoji
-  on purpose: the app's icons, the cats and a few ✧ ♡ are its whole look.
+  on purpose: the app's icons, the cats and a few ✧ ✿ are its whole look (no ♡ anywhere on it).
 - **The link-preview card** (`public/img/card.png`) and the phone icon
   (`public/apple-touch-icon.png`) come from `scripts/render_card.py`. Run it after
   `render_shots.py`, since the card shows a slice of the app.
