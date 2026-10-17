@@ -4,7 +4,7 @@ import { RELEASES_PAGE, formatSize, latest } from "../lib/releases";
 const release = await latest();
 ---
 
-<div class="download">
+<div class="download" data-fetch={release ? undefined : ""}>
   <a class="button" href={release?.url ?? RELEASES_PAGE}>
     <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
@@ -15,6 +15,26 @@ const release = await latest();
     {release ? <>Version {release.version} · {formatSize(release.size)} · free</> : <>Free · Windows 10 and 11</>}
   </p>
 </div>
+
+<script>
+  // The build couldn't reach GitHub, so find the newest installer here instead.
+  import { API, formatSize, latestOf, type GhRelease } from "../lib/notes";
+
+  const boxes = document.querySelectorAll<HTMLElement>(".download[data-fetch]");
+  if (boxes.length) {
+    fetch(API, { headers: { Accept: "application/vnd.github+json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((all: GhRelease[]) => {
+        const release = latestOf(all);
+        if (!release) return;
+        for (const box of boxes) {
+          box.querySelector("a")!.href = release.url;
+          box.querySelector(".meta")!.textContent = `Version ${release.version} · ${formatSize(release.size)} · free`;
+        }
+      })
+      .catch(() => {}); // the button still goes to the releases page
+  }
+</script>
 
 <style>
   .download { display: flex; flex-direction: column; align-items: center; gap: 8px; }
