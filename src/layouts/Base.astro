@@ -46,6 +46,11 @@ const indexed = !Astro.site?.hostname.endsWith(".workers.dev");
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href="/fonts/Fredoka-600.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Linux visitors get the AppImage as the main download (DownloadButton.astro). Set before
+      // anything is drawn, so the button doesn't switch while you look at it.
+      if (/Linux/.test(navigator.userAgent) && !/Android|CrOS/.test(navigator.userAgent)) document.documentElement.dataset.os = "linux";
+    </script>
     <slot name="head" />
   </head>
   <body>

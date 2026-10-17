@@ -6,14 +6,14 @@ import Themed from "../components/Themed.astro";
 import { RELEASES_PAGE, latest } from "../lib/releases";
 
 const release = await latest();
-// Tells search engines this page is about a free Windows app (shown in results as app info).
+// Tells search engines this page is about a free Windows and Linux app (shown in results as app info).
 const app = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "Nyanga",
-  description: "A cozy Windows app that downloads manga and saves one file per volume as CBZ, PDF, EPUB or image folders.",
+  description: "A cozy Windows and Linux app that downloads manga and saves one file per volume as CBZ, PDF, EPUB or image folders.",
   applicationCategory: "MultimediaApplication",
-  operatingSystem: "Windows 10, Windows 11",
+  operatingSystem: "Windows 10, Windows 11, Linux",
   url: Astro.site?.href,
   image: new URL("/img/card.png", Astro.site).href,
   screenshot: new URL("/img/screenshot-light.webp", Astro.site).href,
@@ -95,7 +95,7 @@ const steps = [
         per volume, ready for whatever reader you like.
       </p>
       <DownloadButton />
-      <p class="formats">CBZ, PDF, EPUB or plain image folders · Windows 10 and 11</p>
+      <p class="formats">CBZ, PDF, EPUB or plain image folders · Windows 10 and 11 · Linux</p>
     </div>
   </section>
 
@@ -145,6 +145,11 @@ const steps = [
           </li>
         ))}
       </ol>
+      <p class="linux-note">
+        On Linux there's nothing to install: download the AppImage, right-click it, tick
+        <b>Allow executing file as program</b> in Properties and open it. Settings has a button that
+        puts it in your app menu, and it updates itself just the same ♡
+      </p>
       <div class="again">
         <Themed name="/img/cat-happy" width={150} height={120} lazy />
         <DownloadButton />
@@ -216,6 +221,8 @@ const steps = [
   .steps h3 { font-size: 19px; margin: 6px 0 2px; }
   .steps p { margin: 0; color: var(--muted); }
   .steps :global(b) { color: var(--text); font-weight: 600; }
+  .linux-note { max-width: 640px; margin: 26px auto 0; color: var(--muted); text-align: center; }
+  .linux-note b { color: var(--text); font-weight: 600; }
   .again { display: flex; flex-direction: column; align-items: center; margin-top: 56px; }
   .again :global(picture) { margin-bottom: 4px; }
   .older { color: var(--muted); font-size: 15px; margin-top: 18px; }

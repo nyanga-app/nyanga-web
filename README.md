@@ -21,9 +21,11 @@
 
 ## ♡ What's on it
 
-- 🏠 **The home page**: a big pink **Download for Windows ♡** button that always points at the
-  newest installer, a peek at the app, what it does, the cats, and gentle install steps that
-  walk you past the "Windows protected your PC" box.
+- 🏠 **The home page**: a big pink **Download for Windows ♡** (or **for Linux ♡** on Linux,
+  picked by a tiny script in `Base.astro` before the page draws) button that always points at
+  the newest installer or AppImage, with a small link to the other one under it. Then a peek at
+  the app, what it does, the cats, and gentle install steps that walk you past the "Windows
+  protected your PC" box, plus a note for Linux.
 - ✨ **What's new**: every update in plain words, newest first, just like the app's own window.
 - 🐾 **A 404 page**, so even lost visitors get a cat.
 - 🌙 **Light and dark**, following your system, in the same colors as the app.
@@ -75,7 +77,7 @@ quick. The pages live in `src/pages/`, the shared header and footer in `src/layo
 ## 🔎 Being found
 
 Every page has a title and description, a canonical link and link-preview tags (`Base.astro`);
-the home page also tells search engines it's a free Windows app (JSON-LD). The sitemap and
+the home page also tells search engines it's a free Windows and Linux app (JSON-LD). The sitemap and
 `robots.txt` are made by the build. All of it follows `site` in `astro.config.mjs`.
 
 While the site still lives on `workers.dev`, every page says `noindex`, so search engines

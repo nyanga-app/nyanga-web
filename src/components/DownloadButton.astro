@@ -2,22 +2,36 @@
 import { RELEASES_PAGE, formatSize, latest } from "../lib/releases";
 
 const release = await latest();
+// Both systems are drawn; Base.astro marks Linux visitors and the CSS shows the right one.
+const windowsMeta = release ? `Version ${release.version} · ${formatSize(release.size)} · free` : "Free · Windows 10 and 11";
+const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(release.linux.size)} · free` : "Free · most Linux systems";
 ---
 
 <div class="download" data-fetch={release ? undefined : ""}>
-  <a class="button" href={release?.url ?? RELEASES_PAGE}>
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
-    </svg>
-    Download for Windows ♡
-  </a>
-  <p class="meta">
-    {release ? <>Version {release.version} · {formatSize(release.size)} · free</> : <>Free · Windows 10 and 11</>}
-  </p>
+  <div class="for windows">
+    <a class="button" href={release?.url ?? RELEASES_PAGE}>
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
+      </svg>
+      Download for Windows ♡
+    </a>
+    <p class="meta">{windowsMeta}</p>
+    <p class="meta other">On Linux? <a data-linux href={release?.linux?.url ?? RELEASES_PAGE}>Get the AppImage</a></p>
+  </div>
+  <div class="for linux">
+    <a class="button" data-linux href={release?.linux?.url ?? RELEASES_PAGE}>
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
+      </svg>
+      Download for Linux ♡
+    </a>
+    <p class="meta">{linuxMeta}</p>
+    <p class="meta other">On Windows? <a data-windows href={release?.url ?? RELEASES_PAGE}>Get the installer</a></p>
+  </div>
 </div>
 
 <script>
-  // The build couldn't reach GitHub, so find the newest installer here instead.
+  // The build couldn't reach GitHub, so find the newest downloads here instead.
   import { API, formatSize, latestOf, type GhRelease } from "../lib/notes";
 
   const boxes = document.querySelectorAll<HTMLElement>(".download[data-fetch]");
@@ -28,15 +42,23 @@ const release = await latest();
         const release = latestOf(all);
         if (!release) return;
         for (const box of boxes) {
-          box.querySelector("a")!.href = release.url;
-          box.querySelector(".meta")!.textContent = `Version ${release.version} · ${formatSize(release.size)} · free`;
+          box.querySelector<HTMLAnchorElement>(".windows .button")!.href = release.url;
+          box.querySelector<HTMLAnchorElement>("[data-windows]")!.href = release.url;
+          box.querySelector(".windows .meta")!.textContent = `Version ${release.version} · ${formatSize(release.size)} · free`;
+          if (!release.linux) continue;
+          for (const a of box.querySelectorAll<HTMLAnchorElement>("[data-linux]")) a.href = release.linux.url;
+          box.querySelector(".linux .meta")!.textContent = `Version ${release.version} · ${formatSize(release.linux.size)} · free`;
         }
       })
-      .catch(() => {}); // the button still goes to the releases page
+      .catch(() => {}); // the buttons still go to the releases page
   }
 </script>
 
 <style>
-  .download { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .download, .for { display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .meta { margin: 0; color: var(--muted); font-size: 15px; }
+  .other { font-size: 14px; }
+  .other a { color: var(--accent); font-weight: 600; }
+  .linux, :global(:root[data-os="linux"]) .windows { display: none; }
+  :global(:root[data-os="linux"]) .linux { display: flex; }
 </style>

@@ -23,6 +23,7 @@ export interface Latest {
   date: string;
   url: string; // the installer
   size: number;
+  linux?: { url: string; size: number }; // the AppImage, from the same release
 }
 
 export interface GhAsset {
@@ -72,7 +73,15 @@ export function fromGitHub(all: GhRelease[]): Release[] {
 export function latestOf(all: GhRelease[]): Latest | null {
   for (const r of all) {
     const exe = r.assets.find((a) => a.name.toLowerCase().endsWith(".exe") && a.name.toLowerCase().includes("setup"));
-    if (exe) return { version: r.tag_name.replace(/^v/, ""), date: r.published_at.slice(0, 10), url: exe.browser_download_url, size: exe.size };
+    if (!exe) continue;
+    const image = r.assets.find((a) => a.name.toLowerCase().endsWith(".appimage"));
+    return {
+      version: r.tag_name.replace(/^v/, ""),
+      date: r.published_at.slice(0, 10),
+      url: exe.browser_download_url,
+      size: exe.size,
+      linux: image && { url: image.browser_download_url, size: image.size },
+    };
   }
   return null;
 }
