@@ -59,7 +59,8 @@ const rows = [
   },
 ];
 
-const steps = [
+// Both are drawn; Base.astro marks Linux visitors and the CSS shows theirs (like DownloadButton).
+const windowsSteps = [
   {
     title: "Download the installer",
     text: "The pink button gets you a file called Nyanga-Setup with a version number on the end.",
@@ -71,6 +72,21 @@ const steps = [
   {
     title: "Find Nyanga in the Start menu",
     text: "That's all. Search for something to read and the cat takes it from there ✧",
+  },
+];
+
+const linuxSteps = [
+  {
+    title: "Download the AppImage",
+    text: "The pink button gets you a file called Nyanga-x86_64.AppImage. That one file is the whole app, so there's nothing to install.",
+  },
+  {
+    title: "Let it run",
+    text: "Put it somewhere it can stay, like an Applications folder in your home. Right-click it, open <b>Properties</b> and tick <b>Allow executing file as program</b>. Keep it in a folder you can write to, so it can update itself.",
+  },
+  {
+    title: "Open it and add it to your menu",
+    text: "Double-click it. In <b>Settings</b>, <b>Add Nyanga to your app menu</b> puts it next to your other apps ✧",
   },
 ];
 ---
@@ -134,22 +150,21 @@ const steps = [
     <div class="wrap">
       <h2>Installing it</h2>
       <p class="lead">Takes a minute, and you only ever do it once. After that it updates itself.</p>
-      <ol class="steps">
-        {steps.map((s) => (
-          <li>
-            <span class="paw"><Icon name="paw" size={20} /></span>
-            <div>
-              <h3>{s.title}</h3>
-              <p set:html={s.text} />
-            </div>
-          </li>
-        ))}
-      </ol>
-      <p class="linux-note">
-        On Linux there's nothing to install: download the AppImage, right-click it, tick
-        <b>Allow executing file as program</b> in Properties and open it. Settings has a button that
-        puts it in your app menu, and it updates itself just the same
-      </p>
+      {[["windows", windowsSteps], ["linux", linuxSteps]].map(([os, steps]) => (
+        <ol class:list={["steps", os]}>
+          {(steps as typeof windowsSteps).map((s) => (
+            <li>
+              <span class="paw"><Icon name="paw" size={20} /></span>
+              <div>
+                <h3>{s.title}</h3>
+                <p set:html={s.text} />
+              </div>
+            </li>
+          ))}
+        </ol>
+      ))}
+      <p class="other-os windows">On Linux? Get the AppImage with the link under the button below.</p>
+      <p class="other-os linux">On Windows? Get the installer with the link under the button below.</p>
       <div class="again">
         <Themed name="/img/cat-happy" width={150} height={120} lazy />
         <DownloadButton />
@@ -221,8 +236,10 @@ const steps = [
   .steps h3 { font-size: 19px; margin: 6px 0 2px; }
   .steps p { margin: 0; color: var(--muted); }
   .steps :global(b) { color: var(--text); font-weight: 600; }
-  .linux-note { max-width: 640px; margin: 26px auto 0; color: var(--muted); text-align: center; }
-  .linux-note b { color: var(--text); font-weight: 600; }
+  .other-os { max-width: 640px; margin: 26px auto 0; color: var(--muted); text-align: center; }
+  .steps.linux, .other-os.linux, :global(:root[data-os="linux"]) .windows { display: none; }
+  :global(:root[data-os="linux"]) .steps.linux { display: grid; }
+  :global(:root[data-os="linux"]) .other-os.linux { display: block; }
   .again { display: flex; flex-direction: column; align-items: center; margin-top: 56px; }
   .again :global(picture) { margin-bottom: 4px; }
   .older { color: var(--muted); font-size: 15px; margin-top: 18px; }
