@@ -1,22 +1,57 @@
 ---
 import Base from "../layouts/Base.astro";
 import DownloadButton from "../components/DownloadButton.astro";
+import Icon from "../components/Icon.astro";
 import Themed from "../components/Themed.astro";
 import { RELEASES_PAGE } from "../lib/releases";
 
-const features = [
-  { icon: "🔎", title: "Search by name", text: "Type a title, pick it from the results, and every chapter shows up with how big each file will be." },
-  { icon: "📚", title: "Volumes, not a pile of pages", text: "One CBZ, PDF or EPUB per volume, or per few chapters when there are no volumes. Long webtoon strips are cut into pages." },
-  { icon: "⚡", title: "Fast but polite", text: "Several files download at once, gently, so the site isn't flooded." },
-  { icon: "💾", title: "Picks up where it stopped", text: "Cancel, close the app, come back tomorrow. Files that are already done are skipped." },
-  { icon: "🗂️", title: "Your own library", text: "Every manga you've downloaded, how much of it you have, and a little “new” badge when chapters come out." },
-  { icon: "🎁", title: "Updates itself", text: "When a new version is out, one click and it's done. A What's new window tells you what changed." },
+// Each row: a bit of the app (a real crop, rendered by scripts/render_shots.py) and a few words about it.
+const rows = [
+  {
+    icon: "search",
+    title: "Look it up by name",
+    text: "Type a title and pick it from the results. Its cover, genres and every chapter show up, along with how big each file will be.",
+    shot: "search",
+    size: [1744, 870],
+  },
+  {
+    icon: "download",
+    title: "One file per volume",
+    text: "Tap the paws to choose what you want. Nyanga fetches a few files at a time, gently so the site isn't flooded, and turns each volume into one CBZ, PDF or EPUB. Close it halfway and it carries on where it stopped next time.",
+    shot: "files",
+    size: [1744, 934],
+    cat: "reading",
+  },
+  {
+    icon: "library",
+    title: "Your own little shelf",
+    text: "Everything you've downloaded lives in the Library: how much of each series you have, a Continue button for anything unfinished, and a “new” badge when chapters come out.",
+    shot: "library",
+    size: [1744, 1202],
+  },
+  {
+    icon: "heart",
+    title: "It keeps itself up to date",
+    text: "When there's a new version, one click and it's done. Afterwards a little window tells you what changed, in plain words.",
+    shot: "whatsnew",
+    size: [1160, 1360],
+    cat: "update",
+  },
 ];
 
-const cats = [
-  { name: "reading", title: "The bookworm", text: "reads while things load", width: 180, height: 144 },
-  { name: "happy", title: "The happy hopper", text: "cheers when a download is done", width: 180, height: 144 },
-  { name: "update", title: "The delivery cat", text: "brings you the new version", width: 120, height: 102 },
+const steps = [
+  {
+    title: "Download the installer",
+    text: "The pink button gets you a file called Nyanga-Setup with a version number on the end.",
+  },
+  {
+    title: "Open it",
+    text: "Windows doesn't know who I am yet, so it might show a blue “Windows protected your PC” box. Click <b>More info</b>, then <b>Run anyway</b>. You only see that once, and you don't need an admin password.",
+  },
+  {
+    title: "Find Nyanga in the Start menu",
+    text: "That's all. Search for something to read and the cat takes it from there ✧",
+  },
 ];
 ---
 
@@ -24,139 +59,119 @@ const cats = [
   <section class="hero">
     <div class="wrap">
       <Themed class="hero-cat" name="/img/cat-reading" width={180} height={144} alt="The Nyanga cat reading a book" />
-      <h1>Nyanga</h1>
-      <p class="tagline">a cute &amp; cozy app that downloads manga for you ✧</p>
-      <p class="sub">nyan + manga: the cat fetches your chapters and saves one tidy file per volume, ready for your favourite reader.</p>
+      <h1>
+        Nyanga
+        <svg class="squiggle" viewBox="0 0 220 18" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 11c18-7 30 6 48 0s30-8 48-1 32 6 50 0 34-7 66-1" />
+        </svg>
+      </h1>
+      <p class="tagline">a cute &amp; cozy app that downloads manga for you</p>
+      <p class="sub">
+        I made Nyanga for friends who read a lot of manga. Pick a title and it saves one tidy file
+        per volume, ready for whatever reader you like.
+      </p>
       <DownloadButton />
-      <div class="formats" aria-label="File types">
-        <span class="chip">CBZ</span><span class="chip">PDF</span><span class="chip">EPUB</span><span class="chip">Image folders</span>
-      </div>
+      <p class="formats">CBZ, PDF, EPUB or plain image folders · Windows 10 and 11</p>
     </div>
   </section>
 
-  <section class="shots">
+  <section class="shot-wrap">
     <div class="wrap">
-      <figure class="card shot">
-        <Themed name="/img/screenshot" ext="png" width={1120} height={840} alt="Nyanga's Download page with a manga looked up, ready to download 8 volumes" />
+      <figure class="frame">
+        <Themed name="/img/screenshot" width={2240} height={1680} alt="Nyanga's Download page with a manga looked up, ready to download 8 volumes" />
       </figure>
     </div>
   </section>
 
-  <section class="section" id="features">
+  <section class="tour" id="features">
     <div class="wrap">
-      <h2>♡ What it does</h2>
-      <p class="lead">Everything you need to keep your manga on your own computer, and nothing you don't.</p>
-      <ul class="grid">
-        {features.map((f) => (
-          <li class="card feature">
-            <span class="emoji" aria-hidden="true">{f.icon}</span>
-            <h3>{f.title}</h3>
-            <p>{f.text}</p>
-          </li>
-        ))}
-      </ul>
-      <p class="note">Light and dark mode, or follow your system. Works with fanfox.net for now, more sites to come.</p>
-    </div>
-  </section>
-
-  <section class="section" id="cats">
-    <div class="wrap">
-      <h2>🐾 Meet the cats</h2>
-      <p class="lead">The cat on the icon is our mascot, and it keeps you company all over the app.</p>
-      <ul class="cats">
-        {cats.map((c) => (
-          <li>
-            <div class="cat-pic">
-              <Themed name={`/img/cat-${c.name}`} width={c.width} height={c.height} lazy />
-            </div>
-            <h3>{c.title}</h3>
-            <p>{c.text}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <section class="section" id="install">
-    <div class="wrap">
-      <h2>💝 Installing it</h2>
-      <p class="lead">Takes a minute, and you only ever do it once. After that the app updates itself.</p>
-      <ol class="steps">
-        <li class="card">
-          <span class="num">1</span>
-          <div>
-            <h3>Download the installer</h3>
-            <p>Click the pink button above. You'll get a file called <b>Nyanga-Setup</b> with a version number.</p>
+      {rows.map((row, i) => (
+        <article class:list={["row", { flip: i % 2 === 1 }]}>
+          <div class="words">
+            <span class="badge"><Icon name={row.icon} size={22} /></span>
+            <h2>{row.title}</h2>
+            <p>{row.text}</p>
+            {row.cat && <Themed class="row-cat" name={`/img/cat-${row.cat}`} width={row.cat === "update" ? 96 : 120} height={row.cat === "update" ? 82 : 96} lazy />}
           </div>
-        </li>
-        <li class="card">
-          <span class="num">2</span>
-          <div>
-            <h3>Open it, and say yes to Windows</h3>
-            <p>
-              Windows may show a blue box saying <b>“Windows protected your PC”</b>. That's because Nyanga is
-              made by one person and isn't signed by a big company. Click <b>More info</b>,
-              then <b>Run anyway</b>. No admin password needed.
-            </p>
-          </div>
-        </li>
-        <li class="card">
-          <span class="num">3</span>
-          <div>
-            <h3>Find Nyanga in your Start menu</h3>
-            <p>That's it ✧ Search for a manga, pick the chapters you want, and the cat does the rest.</p>
-          </div>
-        </li>
-      </ol>
-      <p class="note">
-        Need an older version? They're all on the <a href={RELEASES_PAGE.replace(/\/latest$/, "")}>releases page</a>.
+          <figure class="frame">
+            <Themed name={`/img/shot-${row.shot}`} width={row.size[0]} height={row.size[1]} alt="" lazy />
+          </figure>
+        </article>
+      ))}
+      <p class="aside">
+        <Icon name="moon" size={18} /> Light and dark mode, or follow your system.
+        <span class="dot">·</span>
+        <Icon name="paw" size={18} /> Works with fanfox.net for now.
       </p>
-      <div class="again"><DownloadButton /></div>
+    </div>
+  </section>
+
+  <section class="install" id="install">
+    <div class="wrap">
+      <h2>Installing it</h2>
+      <p class="lead">Takes a minute, and you only ever do it once. After that it updates itself.</p>
+      <ol class="steps">
+        {steps.map((s) => (
+          <li>
+            <span class="paw"><Icon name="paw" size={20} /></span>
+            <div>
+              <h3>{s.title}</h3>
+              <p set:html={s.text} />
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="again">
+        <Themed name="/img/cat-happy" width={150} height={120} lazy />
+        <DownloadButton />
+        <p class="older">Need an older version? They're all on the <a href={RELEASES_PAGE.replace(/\/latest$/, "")}>releases page</a>.</p>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  .hero { padding: 48px 0 24px; text-align: center; }
-  .hero-cat { display: block; margin: 0 auto -6px; }
-  h1 { font-size: clamp(48px, 9vw, 76px); color: var(--accent); letter-spacing: -0.5px; }
-  .tagline { font-size: clamp(20px, 3vw, 24px); font-weight: 600; margin: 6px 0 6px; }
-  .sub { color: var(--muted); max-width: 520px; margin: 0 auto 28px; }
-  .formats { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+  .hero { padding: 40px 0 16px; text-align: center; }
+  .hero :global(.hero-cat) { display: block; width: fit-content; margin: 0 auto -4px; }
+  h1 { position: relative; display: inline-block; font-size: clamp(52px, 10vw, 80px); color: var(--accent); letter-spacing: -0.5px; padding-bottom: 6px; }
+  .squiggle { position: absolute; left: 4%; right: 4%; bottom: -2px; width: 92%; height: 16px; }
+  .squiggle path { fill: none; stroke: var(--primary-a); stroke-width: 5; stroke-linecap: round; opacity: 0.75; }
+  .tagline { font-size: clamp(20px, 3vw, 24px); font-weight: 600; margin: 14px 0 8px; }
+  .sub { color: var(--muted); max-width: 540px; margin: 0 auto 28px; }
+  .formats { color: var(--muted); font-size: 15px; margin-top: 18px; }
 
-  .shots { padding: 32px 0 0; }
-  .shot { margin: 0; padding: 10px; overflow: hidden; }
-  .shot { line-height: 0; }
-  .shot :global(img) { width: 100%; border-radius: 14px; }
+  .shot-wrap { padding: 28px 0 8px; }
+  .frame { margin: 0; line-height: 0; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
+  .frame :global(img) { width: 100%; height: auto; }
 
-  .grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-  .feature { padding: 22px 22px 18px; }
-  .feature h3 { font-size: 19px; margin: 8px 0 4px; }
-  .feature p { margin: 0; color: var(--muted); }
-  .emoji { font-size: 28px; }
-  .note { text-align: center; color: var(--muted); margin-top: 24px; font-size: 15px; }
+  .tour { padding-top: 64px; }
+  .row { display: grid; grid-template-columns: 5fr 7fr; gap: 48px; align-items: center; margin-bottom: 72px; }
+  .row.flip { grid-template-columns: 7fr 5fr; }
+  .row.flip .words { order: 2; }
+  .words h2 { font-size: clamp(24px, 3.4vw, 30px); color: var(--text); text-align: left; margin: 14px 0 8px; }
+  .words p { color: var(--muted); margin: 0; }
+  .words :global(.row-cat) { display: block; margin-top: 18px; }
+  .badge { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 16px; background: var(--chip); color: var(--accent); }
+  .aside { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; color: var(--muted); font-size: 15px; margin: -24px 0 0; }
+  .aside :global(svg) { color: var(--accent); }
+  .dot { margin: 0 8px; }
 
-  .cats { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 48px; text-align: center; }
-  .cats li { width: 220px; }
-  .cat-pic { height: 160px; display: flex; align-items: flex-end; justify-content: center; }
-  .cats h3 { font-size: 18px; margin-top: 8px; }
-  .cats p { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
-
-  .steps { list-style: none; padding: 0; margin: 0 auto; max-width: 720px; display: grid; gap: 14px; }
-  .steps li { display: flex; gap: 16px; padding: 20px 22px; align-items: flex-start; }
-  .steps h3 { font-size: 19px; margin-bottom: 4px; }
+  .install { padding-top: 88px; }
+  .install h2 { color: var(--accent); }
+  .lead { text-align: center; color: var(--muted); margin: 8px auto 30px; }
+  .steps { list-style: none; padding: 0; margin: 0 auto; max-width: 640px; display: grid; gap: 22px; }
+  .steps li { display: flex; gap: 16px; align-items: flex-start; }
+  .paw { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-a), var(--primary-b)); color: #fff; }
+  .steps h3 { font-size: 19px; margin: 6px 0 2px; }
   .steps p { margin: 0; color: var(--muted); }
-  .steps b { color: var(--text); font-weight: 600; }
-  .num {
-    flex: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg, var(--primary-a), var(--primary-b));
-    color: #fff;
-    font-weight: 700;
+  .steps :global(b) { color: var(--text); font-weight: 600; }
+  .again { display: flex; flex-direction: column; align-items: center; margin-top: 56px; }
+  .again :global(picture) { margin-bottom: 4px; }
+  .older { color: var(--muted); font-size: 15px; margin-top: 18px; }
+
+  @media (max-width: 760px) {
+    .row, .row.flip { grid-template-columns: 1fr; gap: 22px; margin-bottom: 56px; }
+    .row.flip .words { order: 0; }
+    .words :global(.row-cat) { display: none; }
   }
-  .again { margin-top: 36px; }
 </style>
