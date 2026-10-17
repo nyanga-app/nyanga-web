@@ -3,7 +3,23 @@ import Base from "../layouts/Base.astro";
 import DownloadButton from "../components/DownloadButton.astro";
 import Icon from "../components/Icon.astro";
 import Themed from "../components/Themed.astro";
-import { RELEASES_PAGE } from "../lib/releases";
+import { RELEASES_PAGE, latest } from "../lib/releases";
+
+const release = await latest();
+// Tells search engines this page is about a free Windows app (shown in results as app info).
+const app = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Nyanga",
+  description: "A cozy Windows app that downloads manga and saves one file per volume as CBZ, PDF, EPUB or image folders.",
+  applicationCategory: "MultimediaApplication",
+  operatingSystem: "Windows 10, Windows 11",
+  url: Astro.site?.href,
+  image: new URL("/img/card.png", Astro.site).href,
+  screenshot: new URL("/img/screenshot-light.webp", Astro.site).href,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  ...(release && { softwareVersion: release.version, downloadUrl: release.url, datePublished: release.date }),
+};
 
 // Each row: a bit of the app (a real crop, rendered by scripts/render_shots.py) and a few words about it.
 const rows = [
@@ -13,6 +29,7 @@ const rows = [
     text: "Type a title and pick it from the results. Its cover, genres and every chapter show up, along with how big each file will be.",
     shot: "search",
     size: [1744, 870],
+    alt: "Search results in Nyanga: six manga with their covers, status and latest chapter",
   },
   {
     icon: "download",
@@ -20,6 +37,7 @@ const rows = [
     text: "Tap the paws to choose what you want. Nyanga fetches a few files at a time, gently so the site isn't flooded, and turns each volume into one CBZ, PDF or EPUB. Close it halfway and it carries on where it stopped next time.",
     shot: "files",
     size: [1744, 934],
+    alt: "Nyanga downloading volumes: two done, one being made into an EPUB, one at 57%",
     cat: "reading",
   },
   {
@@ -28,6 +46,7 @@ const rows = [
     text: "Everything you've downloaded lives in the Library: how much of each series you have, a Continue button for anything unfinished, and a “new” badge when chapters come out.",
     shot: "library",
     size: [1744, 1202],
+    alt: "The Library: three manga with progress bars, a Continue button and a “2 new” badge",
   },
   {
     icon: "heart",
@@ -35,6 +54,7 @@ const rows = [
     text: "When there's a new version, one click and it's done. Afterwards a little window tells you what changed, in plain words.",
     shot: "whatsnew",
     size: [1160, 1360],
+    alt: "The What's new window listing a new feature and a fix in plain words",
     cat: "update",
   },
 ];
@@ -56,6 +76,7 @@ const steps = [
 ---
 
 <Base>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(app)} />
   <section class="hero">
     <div class="wrap">
       <Themed class="hero-cat" name="/img/cat-reading" width={180} height={144} alt="The Nyanga cat reading a book" />
@@ -94,7 +115,7 @@ const steps = [
             {row.cat && <Themed class="row-cat" name={`/img/cat-${row.cat}`} width={row.cat === "update" ? 96 : 120} height={row.cat === "update" ? 82 : 96} lazy />}
           </div>
           <figure class="frame">
-            <Themed name={`/img/shot-${row.shot}`} width={row.size[0]} height={row.size[1]} alt="" lazy />
+            <Themed name={`/img/shot-${row.shot}`} width={row.size[0]} height={row.size[1]} alt={row.alt} lazy />
           </figure>
         </article>
       ))}

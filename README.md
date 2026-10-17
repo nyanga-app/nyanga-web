@@ -67,7 +67,20 @@ quick. The pages live in `src/pages/`, the shared header and footer in `src/layo
 - **The icons** are the app's own (`src/lib/icons.ts`, used through `src/components/Icon.astro`),
   copied from `theme.py` by `../.venv/bin/python scripts/export_icons.py`. The site has no emoji
   on purpose: the app's icons, the cats and a few ✧ ♡ are its whole look.
-- **The font** is Fredoka (`public/fonts/`, SIL Open Font License).
+- **The link-preview card** (`public/img/card.png`) and the phone icon
+  (`public/apple-touch-icon.png`) come from `scripts/render_card.py`. Run it after
+  `render_shots.py`, since the card shows a slice of the app.
+- **The font** is Fredoka as WOFF2 (`public/fonts/`, SIL Open Font License).
+
+## 🔎 Being found
+
+Every page has a title and description, a canonical link and link-preview tags (`Base.astro`);
+the home page also tells search engines it's a free Windows app (JSON-LD). The sitemap and
+`robots.txt` are made by the build. All of it follows `site` in `astro.config.mjs`.
+
+When the site moves to its own domain: add it under the Cloudflare project's Domains &
+Routes, change `site` in `astro.config.mjs` (and the link at the top of this file), push, and
+add the new address in Google Search Console with its sitemap.
 
 ## 🚀 Going live
 
