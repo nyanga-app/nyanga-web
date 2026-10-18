@@ -17,5 +17,7 @@ export const ICONS: Record<string, string> = {
   "sun": "<circle cx=\"12\" cy=\"12\" r=\"4.2\" fill=\"currentColor\"/><path d=\"M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"/>",
   "check": "<path d=\"M5.5 12.5l4.2 4.2 8.8-9.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
   "select_none": "<rect x=\"4.5\" y=\"4.5\" width=\"15\" height=\"15\" rx=\"4.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\"/>",
+  "grid": "<rect x=\"4\" y=\"4\" width=\"6.6\" height=\"6.6\" rx=\"1.8\" fill=\"currentColor\"/><rect x=\"13.4\" y=\"4\" width=\"6.6\" height=\"6.6\" rx=\"1.8\" fill=\"currentColor\"/><rect x=\"4\" y=\"13.4\" width=\"6.6\" height=\"6.6\" rx=\"1.8\" fill=\"currentColor\"/><rect x=\"13.4\" y=\"13.4\" width=\"6.6\" height=\"6.6\" rx=\"1.8\" fill=\"currentColor\"/>",
+  "filter": "<path d=\"M4.5 6h15l-5.8 6.8v5.4l-3.4 1.8v-7.2z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>",
   "list": "<path d=\"M9 7h10M9 12h10M9 17h6\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><circle cx=\"5\" cy=\"7\" r=\"1.4\" fill=\"currentColor\"/><circle cx=\"5\" cy=\"12\" r=\"1.4\" fill=\"currentColor\"/><circle cx=\"5\" cy=\"17\" r=\"1.4\" fill=\"currentColor\"/>"
 };
