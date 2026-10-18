@@ -74,7 +74,7 @@ def card() -> None:
     p.drawText(QRectF(70, 270, 600, 130), Qt.AlignLeft | Qt.AlignVCenter, "Nyanga")
     p.setPen(QColor(light["text"]))
     p.setFont(font(34, QFont.DemiBold))
-    p.drawText(QRectF(74, 410, 600, 60), Qt.AlignLeft | Qt.AlignVCenter, "a cozy manga downloader for Windows")
+    p.drawText(QRectF(74, 410, 600, 60), Qt.AlignLeft | Qt.AlignVCenter, "a cozy manga downloader")
     p.setPen(QColor(light["muted"]))
     p.setFont(font(28, QFont.Medium))
     p.drawText(QRectF(76, 480, 560, 50), Qt.AlignLeft | Qt.AlignVCenter, "one file per volume · CBZ, PDF, EPUB")
