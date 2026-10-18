@@ -73,6 +73,9 @@ quick. The pages live in `src/pages/`, the shared header and footer in `src/layo
   (`public/apple-touch-icon.png`) come from `scripts/render_card.py`. Run it after
   `render_shots.py`, since the card shows a slice of the app.
 - **The font** is Fredoka as WOFF2 (`public/fonts/`, SIL Open Font License).
+- **Kept up to date by itself:** when the app's look changes (`gui.py`, `theme.py`, `loader.py`,
+  `core.py`, its fonts or icons), the app repo's `screenshots.yml` workflow runs all four scripts
+  above and commits the new pictures here as `chore: refreshed the app pictures`.
 
 ## 🔎 Being found
 
