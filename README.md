@@ -7,7 +7,7 @@
 <p align="center">
   <b>the cozy little home page for Nyanga ✧</b><br>
   <i>where friends come to meet the cat and grab the app</i><br>
-  <a href="https://nyanga-web.nyanga.workers.dev">nyanga-web.nyanga.workers.dev</a>
+  <a href="https://nyanga.page">nyanga.page</a>
 </p>
 
 <p align="center">
@@ -80,12 +80,9 @@ Every page has a title and description, a canonical link and link-preview tags (
 the home page also tells search engines it's a free Windows and Linux app (JSON-LD). The sitemap and
 `robots.txt` are made by the build. All of it follows `site` in `astro.config.mjs`.
 
-While the site still lives on `workers.dev`, every page says `noindex`, so search engines
-leave it alone until it has a proper home. Pointing `site` at the real domain lifts it.
-
-When the site moves to its own domain: add it under the Cloudflare project's Domains &
-Routes, change `site` in `astro.config.mjs` (and the link at the top of this file), push, and
-add the new address in Google Search Console with its sitemap.
+The site lives at `nyanga.page` (a custom domain under the Cloudflare project's Domains &
+Routes). If `site` ever points at a `workers.dev` address, every page says `noindex`, so
+search engines only list the real domain.
 
 ## 🚀 Going live
 
@@ -94,7 +91,7 @@ Every push to `main` is built and published by Cloudflare (Workers with static a
 | Step | What runs |
 |------|-----------|
 | Build | `npm run build` |
-| Deploy | `npx wrangler deploy`, which serves `dist/` as set in `wrangler.jsonc` |
+| Deploy | `npx wrangler deploy`, which serves `dist/` as set in `wrangler.jsonc`; `worker.js` runs first and redirects the old workers.dev address to nyanga.page |
 
 A `GITHUB_TOKEN` build variable in Cloudflare (a read-only token for public repos) keeps GitHub
 from rate-limiting the builds. It's optional; without it the site still works.
