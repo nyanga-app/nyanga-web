@@ -33,7 +33,7 @@ paths.DATA = paths.CONFIG = DATA
 from PIL import Image  # noqa: E402
 from PySide6.QtCore import QBuffer, QEvent, QPoint, QPointF, QRect, QRectF, Qt  # noqa: E402
 from PySide6.QtGui import QColor, QFont, QImage, QLinearGradient, QPainter, QPainterPath, QPen  # noqa: E402
-from PySide6.QtWidgets import QApplication, QWidget  # noqa: E402
+from PySide6.QtWidgets import QApplication, QPushButton, QWidget  # noqa: E402
 
 import core  # noqa: E402
 import gui  # noqa: E402
@@ -160,6 +160,7 @@ def window(mode: str, size: tuple[int, int]) -> gui.MainWindow:
         "download_dir": r"C:\Users\you\Downloads\Manga", "theme": mode, "seen_version": VERSION,
         "default_format": "epub"}))
     w = gui.MainWindow()
+    w.findChild(QPushButton, "version").hide()  # it would go out of date
     w.resize(*size)
     w.show()
     QApplication.processEvents()
