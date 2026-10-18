@@ -14,7 +14,8 @@ export interface Item {
 
 export interface Release {
   version: string;
-  date: string;
+  date: string; // the UTC day
+  time?: string; // the exact UTC moment (newer notes), so browsers can show their own day
   items: Item[];
 }
 
@@ -66,7 +67,12 @@ export function parseBody(body: string): Item[] {
 /** Every release with changes worth showing, newest first, from GitHub's release list. */
 export function fromGitHub(all: GhRelease[]): Release[] {
   return all
-    .map((r) => ({ version: r.tag_name.replace(/^v/, ""), date: r.published_at.slice(0, 10), items: parseBody(r.body ?? "") }))
+    .map((r) => ({
+      version: r.tag_name.replace(/^v/, ""),
+      date: r.published_at.slice(0, 10),
+      time: r.published_at,
+      items: parseBody(r.body ?? ""),
+    }))
     .filter((r) => r.items.length);
 }
 
@@ -90,4 +96,14 @@ export const formatSize = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(0)
 
 export function formatDate(iso: string): string {
   return new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+}
+
+/** Swaps each release's UTC day (from the build) for the visitor's own day. */
+export function localDates(root: ParentNode): void {
+  for (const el of root.querySelectorAll<HTMLTimeElement>("time[data-local]")) {
+    const when = new Date(el.dateTime);
+    if (!isNaN(when.getTime())) {
+      el.textContent = when.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    }
+  }
 }

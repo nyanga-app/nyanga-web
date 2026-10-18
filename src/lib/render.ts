@@ -21,7 +21,7 @@ export function releasesHtml(releases: Release[]): string {
       return `<article class="release">
   <header>
     <h2>Version ${esc(r.version)}</h2>${i === 0 ? '<span class="chip latest">latest</span>' : ""}
-    <time datetime="${esc(r.date)}">${formatDate(r.date)}</time>
+    <time datetime="${esc(r.time ?? r.date)}"${r.time ? " data-local" : ""}>${formatDate(r.date)}</time>
   </header>${sections}
 </article>`;
     })

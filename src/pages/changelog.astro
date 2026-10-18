@@ -30,10 +30,12 @@ const releases = await history();
 </Base>
 
 <script>
-  // The build couldn't reach GitHub, so fetch the notes here instead.
-  import { API, RELEASES_PAGE, fromGitHub, type GhRelease } from "../lib/notes";
+  // Dates come from the build in UTC; show the visitor's own day instead. If the build couldn't
+  // reach GitHub, fetch the notes here.
+  import { API, RELEASES_PAGE, fromGitHub, localDates, type GhRelease } from "../lib/notes";
   import { releasesHtml } from "../lib/render";
 
+  localDates(document);
   const box = document.querySelector<HTMLElement>("#notes[data-fetch]");
   if (box) {
     fetch(API, { headers: { Accept: "application/vnd.github+json" } })
@@ -42,6 +44,7 @@ const releases = await history();
         const releases = fromGitHub(all);
         if (!releases.length) throw new Error("no notes");
         box.innerHTML = releasesHtml(releases);
+        localDates(box);
       })
       .catch(() => {
         box.innerHTML = `<p class="waiting">The notes couldn't be loaded right now. They're also on the <a href="${RELEASES_PAGE}">releases page</a>.</p>`;
