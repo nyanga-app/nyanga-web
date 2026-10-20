@@ -262,7 +262,7 @@ def whats_new(mode: str) -> None:
         {"kind": "fix", "area": "Library", "title": "Keep download progress when a manga is removed",
          "detail": "Removing a manga with downloaded files asks whether to keep or delete them."},
     ]}]
-    d = gui.WhatsNew(w, notes, f"Nyanga just updated to version {VERSION}. Here's what changed ♡")
+    d = gui.WhatsNew(w, notes, f"Nyanga just updated to version {VERSION}. Here's what changed ♥")
     d.show()
     QApplication.processEvents()
     save(d.grab(), f"shot-whatsnew-{mode}")

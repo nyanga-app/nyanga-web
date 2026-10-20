@@ -5,7 +5,7 @@
 <h1 align="center">nyanga-web</h1>
 
 <p align="center">
-  <b>the cozy little home page for Nyanga ✧</b><br>
+  <b>the cozy little home page for Nyanga ✦</b><br>
   <i>where friends come to meet the cat and grab the app</i><br>
   <a href="https://nyanga.page">nyanga.page</a>
 </p>
@@ -19,7 +19,7 @@
 
 ---
 
-## ♡ What's on it
+## ♥ What's on it
 
 - 🏠 **The home page**: a big pink **Download for Windows** (or **for Linux** on Linux,
   picked by a tiny script in `Base.astro` before the page draws) button that always points at
@@ -68,7 +68,7 @@ quick. The pages live in `src/pages/`, the shared header and footer in `src/layo
 
 - **The icons** are the app's own (`src/lib/icons.ts`, used through `src/components/Icon.astro`),
   copied from `theme.py` by `../.venv/bin/python scripts/export_icons.py`. The site has no emoji
-  on purpose: the app's icons, the cats and a few ✧ ✿ are its whole look (no ♡ anywhere on it).
+  on purpose: the app's icons, the cats and a few ✦ ✿ are its whole look (no hearts anywhere on it).
 - **The link-preview card** (`public/img/card.png`) and the phone icon
   (`public/apple-touch-icon.png`) come from `scripts/render_card.py`. Run it after
   `render_shots.py`, since the card shows a slice of the app.
@@ -104,5 +104,5 @@ from rate-limiting the builds. It's optional; without it the site still works.
     <source media="(prefers-color-scheme: dark)" srcset="public/img/cat-happy-dark.webp">
     <img src="public/img/cat-happy-light.webp" width="150" alt="A happy cat hopping with hearts">
   </picture><br>
-  <sub>made with ♡ and a lot of cat naps</sub>
+  <sub>made with ♥ and a lot of cat naps</sub>
 </p>
