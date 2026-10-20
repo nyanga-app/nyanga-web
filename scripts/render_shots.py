@@ -7,7 +7,7 @@ settings and library. Run from this folder inside the app checkout:
     QT_QPA_PLATFORM=offscreen ../.venv/bin/python scripts/render_shots.py
 
 Writes screenshot-<mode>.webp (the whole Download page) and shot-<name>-<mode>.webp crops:
-search, files, library and whatsnew.
+search, files, library, phone and whatsnew.
 """
 
 from __future__ import annotations
@@ -253,6 +253,34 @@ def library(mode: str) -> None:
     w.close()
 
 
+def send_to_phone(mode: str) -> None:
+    import phone
+    phone.Share.start = lambda self: setattr(self, "url", "http://192.168.1.20:8765/nyanga/") or self.url  # no server
+    w = window(mode, (1120, 840))
+    title = MANGA[1][0]
+    folder = DATA / "Phone" / title
+    folder.mkdir(parents=True, exist_ok=True)
+    files = []
+    for v in range(1, 7):
+        f = folder / f"{title} - Vol. {v:02d}.epub"
+        with f.open("wb") as fh:
+            fh.truncate(38_000_000 + v * 2_700_000)  # sparse: the size shows, nothing is written
+        files.append(f)
+    cover = DATA / "phone-cover.img"
+    cover.write_bytes(COVERS[1])
+    d = gui.SendToPhone(w, w.settings, title, files, cover, ticked=set(files[:4]))
+    d.show()
+    QApplication.processEvents()
+    d._on_event("visit", -1, 0, 0, "iPhone")
+    for i in (0, 1):
+        d._on_event("done", i, 1, 1, "iPhone")
+    d._on_event("progress", 2, 62, 100, "iPhone")
+    QApplication.processEvents()
+    save(d.grab(), f"shot-phone-{mode}")
+    d.close()
+    w.close()
+
+
 def whats_new(mode: str) -> None:
     w = window(mode, (1120, 840))
     notes = [{"version": VERSION, "date": "2026-10-17", "items": [
@@ -276,7 +304,7 @@ def main() -> None:
     app.setFont(theme.load_font())
     COVERS = [_cover(t, *colors, motif) for t, _, _, _, colors, motif in MANGA]
     for mode in ("light", "dark"):
-        for render in (download_page, search, files, library, whats_new):
+        for render in (download_page, search, files, library, send_to_phone, whats_new):
             render(mode)
     app.quit()
 
