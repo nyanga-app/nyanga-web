@@ -94,10 +94,9 @@ h2 { font-size: clamp(26px, 4vw, 34px); color: var(--accent); text-align: center
   font-weight: 700;
   font-size: 19px;
   text-decoration: none;
-  box-shadow: 0 8px 22px rgba(255, 92, 154, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease;
 }
-.button:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255, 92, 154, 0.45); }
+.button:hover { color: #fff; transform: translateY(-2px); }
 .button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
