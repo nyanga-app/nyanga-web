@@ -1,0 +1,26 @@
+---
+// One numbered step of an install guide: a paw, a title and whatever goes under it.
+import Icon from "./Icon.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<li class="step">
+  <span class="paw"><Icon name="paw" size={20} /></span>
+  <div>
+    <h3>{title}</h3>
+    <slot />
+  </div>
+</li>
+
+<style>
+  .step { display: flex; gap: 16px; align-items: flex-start; min-width: 0; }
+  .step > div { flex: 1; min-width: 0; }
+  .paw { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-a), var(--primary-b)); color: #fff; }
+  h3 { font-size: 19px; margin: 6px 0 4px; }
+  @media (max-width: 560px) { .step { gap: 12px; } }
+</style>

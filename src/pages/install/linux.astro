@@ -1,0 +1,57 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Command from "../../components/Command.astro";
+import Step from "../../components/Step.astro";
+import { RELEASES_PAGE, formatSize, latest } from "../../lib/releases";
+
+const release = await latest();
+const url = release?.linux?.url ?? RELEASES_PAGE;
+const app = "~/Applications/Nyanga-x86_64.AppImage";
+---
+
+<Docs
+  title="Installing Nyanga on Linux"
+  description="Run Nyanga, the cozy manga downloader, on Linux: download the AppImage, make it runnable, and add it to your app menu. Commands you can copy included."
+  heading="On Linux"
+  lead={`Most 64-bit Linux systems from the last few years${release?.linux ? ` · version ${release.version} · ${formatSize(release.linux.size)}` : ""}`}
+  sections={[
+    { id: "install", title: "Installing it" },
+    { id: "updates", title: "Updates" },
+    { id: "trouble", title: "If it won't start" },
+    { id: "remove", title: "Removing it" },
+  ]}
+>
+  <h2 id="install">Installing it</h2>
+  <ol class="steps">
+    <Step title="Download the AppImage">
+      <p>Get it here: <a href={url}>Nyanga-x86_64.AppImage</a>. That one file is the whole app, so there's nothing to install.</p>
+    </Step>
+    <Step title="Give it a home and let it run">
+      <p>Move it somewhere it can stay, like an <b>Applications</b> folder in your home, and allow it to run. In most file managers that's right-click → <b>Properties</b> → <b>Permissions</b>, then tick <b>Allow executing file as program</b> (KDE calls it <b>Is executable</b>). Or paste this into a terminal, which does all of it:</p>
+      <Command code={`mkdir -p ~/Applications\nmv ~/Downloads/Nyanga-x86_64.AppImage ~/Applications/\nchmod +x ${app}`} />
+    </Step>
+    <Step title="Open it and add it to your menu">
+      <p>Double-click it, or start it from a terminal:</p>
+      <Command code={app} />
+      <p>Then in Nyanga's <b>Settings</b>, press <b>Add Nyanga to your app menu</b>. From then on it sits with your other apps ✦</p>
+    </Step>
+  </ol>
+
+  <h2 id="updates">Updates</h2>
+  <div class="box">
+    <p>When there's a new version, Nyanga shows a little card. Press <b>Update now</b> and it swaps in the new AppImage and opens again. That only works if it can write to its folder, so keep it somewhere in your home.</p>
+  </div>
+
+  <h2 id="trouble">If it won't start</h2>
+  <div class="box">
+    <p>A few systems can't mount AppImages (you'll see a message about <b>FUSE</b>). This runs it anyway:</p>
+    <Command code={`${app} --appimage-extract-and-run`} />
+  </div>
+
+  <h2 id="remove">Removing it</h2>
+  <div class="box">
+    <p>In Nyanga's <b>Settings</b>, take it out of the app menu, then delete the AppImage. Your downloaded manga stay where they are.</p>
+    <p>To remove your library and settings too:</p>
+    <Command code="rm -r ~/.local/share/Nyanga ~/.config/Nyanga" />
+  </div>
+</Docs>

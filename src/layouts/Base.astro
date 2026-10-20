@@ -62,7 +62,7 @@ const indexed = !Astro.site?.hostname.endsWith(".workers.dev");
         </a>
         <nav>
           <a href="/#features">Features</a>
-          <a href="/#install">Install</a>
+          <a href="/install/" aria-current={path.startsWith("/install") ? "page" : undefined}>Install</a>
           <a href="/changelog/" aria-current={path.startsWith("/changelog") ? "page" : undefined}>What's new</a>
         </nav>
       </div>

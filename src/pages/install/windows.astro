@@ -1,0 +1,50 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Command from "../../components/Command.astro";
+import Step from "../../components/Step.astro";
+import { RELEASES_PAGE, formatSize, latest } from "../../lib/releases";
+
+const release = await latest();
+const url = release?.url ?? RELEASES_PAGE;
+const file = release ? `Nyanga-Setup-${release.version}.exe` : "Nyanga-Setup with a version number on the end";
+---
+
+<Docs
+  title="Installing Nyanga on Windows"
+  description="Install Nyanga, the cozy manga downloader, on Windows 10 or 11: download the installer, get past the blue SmartScreen box, and find it in the Start menu."
+  heading="On Windows"
+  lead={`Windows 10 and 11${release ? ` · version ${release.version} · ${formatSize(release.size)}` : ""}`}
+  sections={[
+    { id: "install", title: "Installing it" },
+    { id: "updates", title: "Updates" },
+    { id: "remove", title: "Removing it" },
+  ]}
+>
+  <h2 id="install">Installing it</h2>
+  <ol class="steps">
+    <Step title="Download the installer">
+      <p>Get it here: <a href={url}>{file}</a>. It lands in your Downloads folder.</p>
+    </Step>
+    <Step title="Open it">
+      <p>Double-click the file. Windows doesn't know who I am yet, so it might show a blue box saying <b>Windows protected your PC</b>. Click <b>More info</b>, then <b>Run anyway</b>. You only see that once.</p>
+    </Step>
+    <Step title="Click through the installer">
+      <p>It installs just for you, in your own user folder, so it never asks for an admin password. The folder it suggests is fine. Tick <b>Create a desktop shortcut</b> if you'd like one, then <b>Install</b>. Leave <b>Launch Nyanga</b> ticked at the end and press <b>Finish</b>.</p>
+    </Step>
+    <Step title="Find it in the Start menu">
+      <p>Next time, open the Start menu and type <b>Nyanga</b>. That's all ✦</p>
+    </Step>
+  </ol>
+
+  <h2 id="updates">Updates</h2>
+  <div class="box">
+    <p>When there's a new version, Nyanga shows a little card. Press <b>Update now</b> and it does the rest, then opens again. A small window tells you what changed.</p>
+  </div>
+
+  <h2 id="remove">Removing it</h2>
+  <div class="box">
+    <p>Open <b>Settings</b> → <b>Apps</b> → <b>Installed apps</b>, find Nyanga and choose <b>Uninstall</b>. Your downloaded manga stay where they are.</p>
+    <p>Your library and settings stay too, in case you come back. To remove them as well, paste this into the address bar of a File Explorer window and delete the folder it opens:</p>
+    <Command code="%APPDATA%\Nyanga" label="File Explorer address bar" />
+  </div>
+</Docs>

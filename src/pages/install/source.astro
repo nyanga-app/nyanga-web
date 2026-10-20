@@ -1,0 +1,62 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Command from "../../components/Command.astro";
+import Step from "../../components/Step.astro";
+import { REPO } from "../../lib/releases";
+
+const folder = REPO.split("/")[1];
+---
+
+<Docs
+  title="Running Nyanga from the source code"
+  description="Run Nyanga, the cozy manga downloader, straight from its source code with Python on Windows, Linux or Mac. Every command ready to copy."
+  heading="From the source code"
+  lead="This runs Nyanga straight from its code. You get the very newest version, but it doesn't update itself: you pull new code when you want it. It should work on a Mac too, though I haven't tried that."
+  sections={[
+    { id: "install", title: "Setting it up" },
+    { id: "updates", title: "Getting the newest version" },
+    { id: "trouble", title: "If the window won't open" },
+  ]}
+>
+  <h2 id="install">Setting it up</h2>
+  <ol class="steps">
+    <Step title="Get Python and Git">
+      <p>Nyanga needs Python 3.10 or newer, and Git to download the code. Paste the line for your system:</p>
+      <Command code="winget install Python.Python.3.13 Git.Git" label="Windows (PowerShell)" />
+      <Command code="sudo apt install python3 python3-venv git" label="Ubuntu, Debian, Mint" />
+      <Command code="sudo dnf install python3 git" label="Fedora" />
+      <Command code="sudo pacman -S python git" label="Arch, Manjaro" />
+      <Command code="brew install python git" label="Mac (with Homebrew)" />
+      <p class="note">On Windows, close and reopen PowerShell afterwards so it finds them.</p>
+    </Step>
+    <Step title="Download the code">
+      <p>This makes a <b>{folder}</b> folder wherever your terminal is, and steps into it:</p>
+      <Command code={`git clone https://github.com/${REPO}.git\ncd ${folder}`} />
+    </Step>
+    <Step title="Set it up">
+      <p>Once only. It makes a private Python folder for Nyanga and installs what it needs (a minute or two):</p>
+      <Command code={"python3 -m venv .venv\n.venv/bin/pip install -r requirements.txt"} label="Linux and Mac" />
+      <Command code={"py -m venv .venv\n.venv\\Scripts\\pip install -r requirements.txt"} label="Windows (PowerShell)" />
+    </Step>
+    <Step title="Start it">
+      <p>From the <b>{folder}</b> folder, any time you want to use it:</p>
+      <Command code=".venv/bin/python nyanga.py" label="Linux and Mac" />
+      <Command code=".venv\Scripts\python nyanga.py" label="Windows (PowerShell)" />
+    </Step>
+  </ol>
+
+  <h2 id="updates">Getting the newest version</h2>
+  <div class="box">
+    <p>From the <b>{folder}</b> folder, pull the new code and catch up on anything new it needs:</p>
+    <Command code={"git pull\n.venv/bin/pip install -r requirements.txt"} label="Linux and Mac" />
+    <Command code={"git pull\n.venv\\Scripts\\pip install -r requirements.txt"} label="Windows (PowerShell)" />
+  </div>
+
+  <h2 id="trouble">If the window won't open</h2>
+  <div class="box">
+    <p>On Linux, if it says it <b>could not load the Qt platform plugin "xcb"</b>, one small library is missing:</p>
+    <Command code="sudo apt install libxcb-cursor0" label="Ubuntu, Debian, Mint" />
+    <Command code="sudo dnf install xcb-util-cursor" label="Fedora" />
+    <p>Running from the code, your settings and library live in the <b>{folder}</b> folder itself. Something else not working? <a href={`https://github.com/${REPO}/issues`}>Tell me about it</a>.</p>
+  </div>
+</Docs>

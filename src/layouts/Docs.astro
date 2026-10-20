@@ -1,0 +1,106 @@
+---
+// The install guide's pages: a sidebar with every page (and the current page's sections under it),
+// the page itself, and links to the pages before and after. On phones the sidebar becomes a row of
+// pills above the page.
+import Base from "./Base.astro";
+import Icon from "../components/Icon.astro";
+
+interface Props {
+  title: string; // the browser tab and search results
+  description: string;
+  heading: string;
+  lead?: string;
+  sections?: { id: string; title: string }[]; // this page's headings, listed in the sidebar
+}
+
+const PAGES = [
+  { href: "/install/", title: "Start here", icon: "cat" },
+  { href: "/install/windows/", title: "Windows", icon: "download" },
+  { href: "/install/linux/", title: "Linux", icon: "download" },
+  { href: "/install/source/", title: "From the source code", icon: "settings" },
+];
+
+const { title, description, heading, lead, sections = [] } = Astro.props;
+const here = Astro.url.pathname.replace(/\/?$/, "/");
+const at = PAGES.findIndex((p) => p.href === here);
+const prev = PAGES[at - 1];
+const next = PAGES[at + 1];
+---
+
+<Base title={title} description={description}>
+  <div class="wrap docs">
+    <aside class="side" aria-label="Install guide">
+      <p class="side-title">Install guide</p>
+      <ul>
+        {PAGES.map((p) => (
+          <li>
+            <a href={p.href} aria-current={p.href === here ? "page" : undefined}>
+              <Icon name={p.icon} size={18} />
+              {p.title}
+            </a>
+            {p.href === here && sections.length > 0 && (
+              <ul class="sections">
+                {sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </aside>
+
+    <main class="doc">
+      <h1>{heading}</h1>
+      {lead && <p class="lead">{lead}</p>}
+      <slot />
+      <nav class="turn" aria-label="More of the guide">
+        {prev ? <a class="prev" href={prev.href}><small>Back</small>← {prev.title}</a> : <span />}
+        {next && <a class="next" href={next.href}><small>Next</small>{next.title} →</a>}
+      </nav>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .docs { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; align-items: start; padding-top: 40px; }
+
+  .side { position: sticky; top: 88px; }
+  .side-title { margin: 0 0 10px 12px; color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .side ul { list-style: none; margin: 0; padding: 0; }
+  .side a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 14px; color: var(--text); font-weight: 500; text-decoration: none; }
+  .side a:hover { background: var(--chip); color: var(--accent); }
+  .side a[aria-current="page"] { background: var(--chip); color: var(--accent); font-weight: 600; }
+  .side a :global(svg) { flex: none; color: var(--accent); }
+  .sections { margin: 2px 0 8px 22px !important; padding-left: 12px !important; border-left: 2px solid var(--border); }
+  .sections a { padding: 5px 10px; font-size: 15px; color: var(--muted); font-weight: 400; }
+
+  .doc { min-width: 0; max-width: 720px; }
+  h1 { font-size: clamp(32px, 6vw, 44px); color: var(--accent); }
+  .lead { color: var(--muted); margin: 8px 0 0; font-size: 18px; }
+
+  /* What the pages put in: steps, the boxes after them and their text. */
+  .doc :global(h2) { text-align: left; font-size: 26px; margin: 44px 0 16px; scroll-margin-top: 84px; }
+  .doc :global(ol.steps) { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .doc :global(p) { color: var(--muted); }
+  .doc :global(.steps p) { margin: 0 0 6px; }
+  .doc :global(b) { color: var(--text); font-weight: 600; }
+  .doc :global(.box) { min-width: 0; padding: 16px 22px 12px; border-radius: 20px; background: var(--bg-soft); }
+  .doc :global(.box p) { margin: 0 0 6px; }
+  .doc :global(.note) { font-size: 15px; }
+
+  .turn { display: flex; justify-content: space-between; gap: 12px; margin-top: 56px; padding-top: 22px; border-top: 2px dashed var(--border); }
+  .turn a { display: flex; flex-direction: column; gap: 2px; padding: 12px 18px; border-radius: 16px; background: var(--card); border: 1px solid var(--border); text-decoration: none; font-weight: 600; }
+  .turn a:hover { box-shadow: var(--shadow); }
+  .turn small { color: var(--muted); font-weight: 500; font-size: 13px; }
+  .next { margin-left: auto; text-align: right; }
+
+  @media (max-width: 820px) {
+    .docs { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-top: 24px; }
+    .side { position: static; }
+    .side-title, .sections { display: none; }
+    .side > ul { display: flex; flex-wrap: wrap; gap: 8px; }
+    .side a { padding: 7px 14px; border-radius: 999px; background: var(--chip); color: var(--accent); font-size: 15px; }
+    .side a[aria-current="page"] { background: linear-gradient(90deg, var(--primary-a), var(--primary-b)); color: #fff; }
+    .side a[aria-current="page"] :global(svg) { color: #fff; }
+    .doc :global(.box) { padding: 14px 14px 10px; }
+  }
+</style>

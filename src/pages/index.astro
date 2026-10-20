@@ -66,37 +66,6 @@ const rows = [
     cat: "update",
   },
 ];
-
-// Both are drawn; Base.astro marks Linux visitors and the CSS shows theirs (like DownloadButton).
-const windowsSteps = [
-  {
-    title: "Download the installer",
-    text: "The pink button gets you a file called Nyanga-Setup with a version number on the end.",
-  },
-  {
-    title: "Open it",
-    text: "Windows doesn't know who I am yet, so it might show a blue “Windows protected your PC” box. Click <b>More info</b>, then <b>Run anyway</b>. You only see that once, and you don't need an admin password.",
-  },
-  {
-    title: "Find Nyanga in the Start menu",
-    text: "That's all. Search for something to read and the cat takes it from there ✦",
-  },
-];
-
-const linuxSteps = [
-  {
-    title: "Download the AppImage",
-    text: "The pink button gets you a file called Nyanga-x86_64.AppImage. That one file is the whole app, so there's nothing to install.",
-  },
-  {
-    title: "Let it run",
-    text: "Put it somewhere it can stay, like an Applications folder in your home. Right-click it, open <b>Properties</b> and tick <b>Allow executing file as program</b>. Keep it in a folder you can write to, so it can update itself.",
-  },
-  {
-    title: "Open it and add it to your menu",
-    text: "Double-click it. In <b>Settings</b>, <b>Add Nyanga to your app menu</b> puts it next to your other apps ✦",
-  },
-];
 ---
 
 <Base>
@@ -158,24 +127,10 @@ const linuxSteps = [
     <div class="wrap">
       <h2>Installing it</h2>
       <p class="lead">Takes a minute, and you only ever do it once. After that it updates itself.</p>
-      {[["windows", windowsSteps], ["linux", linuxSteps]].map(([os, steps]) => (
-        <ol class:list={["steps", os]}>
-          {(steps as typeof windowsSteps).map((s) => (
-            <li>
-              <span class="paw"><Icon name="paw" size={20} /></span>
-              <div>
-                <h3>{s.title}</h3>
-                <p set:html={s.text} />
-              </div>
-            </li>
-          ))}
-        </ol>
-      ))}
-      <p class="other-os windows">On Linux? Get the AppImage with the link under the button below.</p>
-      <p class="other-os linux">On Windows? Get the installer with the link under the button below.</p>
       <div class="again">
         <Themed name="/img/cat-happy" width={150} height={120} lazy />
         <DownloadButton />
+        <p class="guide-link"><a href="/install/">Step-by-step guide, and running it from the source code →</a></p>
         <p class="older">Need an older version? They're all on the <a href={RELEASES_PAGE.replace(/\/latest$/, "")}>releases page</a>.</p>
       </div>
     </div>
@@ -238,19 +193,10 @@ const linuxSteps = [
   .install { padding-top: 88px; }
   .install h2 { color: var(--accent); }
   .lead { text-align: center; color: var(--muted); margin: 8px auto 30px; }
-  .steps { list-style: none; padding: 0; margin: 0 auto; max-width: 640px; display: grid; gap: 22px; }
-  .steps li { display: flex; gap: 16px; align-items: flex-start; }
-  .paw { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-a), var(--primary-b)); color: #fff; }
-  .steps h3 { font-size: 19px; margin: 6px 0 2px; }
-  .steps p { margin: 0; color: var(--muted); }
-  .steps :global(b) { color: var(--text); font-weight: 600; }
-  .other-os { max-width: 640px; margin: 26px auto 0; color: var(--muted); text-align: center; }
-  .steps.linux, .other-os.linux, :global(:root[data-os="linux"]) .windows { display: none; }
-  :global(:root[data-os="linux"]) .steps.linux { display: grid; }
-  :global(:root[data-os="linux"]) .other-os.linux { display: block; }
-  .again { display: flex; flex-direction: column; align-items: center; margin-top: 56px; }
+  .again { display: flex; flex-direction: column; align-items: center; margin-top: 8px; }
   .again :global(picture) { margin-bottom: 4px; }
-  .older { color: var(--muted); font-size: 15px; margin-top: 18px; }
+  .older { color: var(--muted); font-size: 15px; margin-top: 18px; text-align: center; }
+  .guide-link { text-align: center; margin: 18px 0 0; font-weight: 600; }
 
   @media (max-width: 760px) {
     .row, .row.flip { grid-template-columns: 1fr; gap: 22px; margin-bottom: 56px; }
