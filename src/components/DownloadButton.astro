@@ -4,7 +4,9 @@ import { RELEASES_PAGE, formatSize, latest } from "../lib/releases";
 const release = await latest();
 // Both systems are drawn; Base.astro marks Linux visitors and the CSS shows the right one.
 const windowsMeta = release ? `Version ${release.version} · ${formatSize(release.size)} · free` : "Free · Windows 10 and 11";
-const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(release.linux.size)} · free` : "Free · most Linux systems";
+const packages = Boolean(release?.deb && release?.rpm);  // releases before they were added only have the AppImage
+const size = (n?: number) => (n ? ` · ${formatSize(n)}` : "");
+const linuxMeta = packages ? `Version ${release!.version} · free` : release?.linux ? `Version ${release.version} · ${formatSize(release.linux.size)} · free` : "Free · most Linux systems";
 ---
 
 <div class="download" data-fetch={release ? undefined : ""}>
@@ -19,17 +21,30 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
     <p class="meta other">On Linux? <a data-linux href={release?.linux?.url ?? RELEASES_PAGE}>Get the AppImage</a></p>
   </div>
   <div class="for linux">
-    <a class="button" data-linux href={release?.linux?.url ?? RELEASES_PAGE}>
+    <a class="button" data-linux data-single hidden={packages} href={release?.linux?.url ?? RELEASES_PAGE}>
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
       </svg>
       Download for Linux
     </a>
+    <!-- With the .deb and .rpm, the button opens a little menu to pick one (no script needed to open it). -->
+    <details class="pick" data-packages hidden={!packages}>
+      <summary class="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"></path>
+        </svg>
+        Download for Linux
+        <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9.5l6 6 6-6"></path>
+        </svg>
+      </summary>
+      <ul class="menu">
+        <li><a data-linux href={release?.linux?.url ?? RELEASES_PAGE}><b>AppImage</b><span>Any Linux<span data-size="linux">{size(release?.linux?.size)}</span></span></a></li>
+        <li><a data-deb href={release?.deb?.url ?? RELEASES_PAGE}><b>.deb</b><span>Ubuntu, Debian, Mint<span data-size="deb">{size(release?.deb?.size)}</span></span></a></li>
+        <li><a data-rpm href={release?.rpm?.url ?? RELEASES_PAGE}><b>.rpm</b><span>Fedora, openSUSE<span data-size="rpm">{size(release?.rpm?.size)}</span></span></a></li>
+      </ul>
+    </details>
     <p class="meta">{linuxMeta}</p>
-    <p class="meta other" data-packages hidden={!(release?.deb && release?.rpm)}>
-      Or as a <a data-deb href={release?.deb?.url ?? RELEASES_PAGE}>.deb</a> (Ubuntu, Debian)
-      or <a data-rpm href={release?.rpm?.url ?? RELEASES_PAGE}>.rpm</a> (Fedora)
-    </p>
     <p class="meta other">On Windows? <a data-windows href={release?.url ?? RELEASES_PAGE}>Get the installer</a></p>
   </div>
 </div>
@@ -55,11 +70,22 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
           if (release.deb && release.rpm) {
             box.querySelector<HTMLAnchorElement>("[data-deb]")!.href = release.deb.url;
             box.querySelector<HTMLAnchorElement>("[data-rpm]")!.href = release.rpm.url;
+            for (const [kind, n] of [["linux", release.linux.size], ["deb", release.deb.size], ["rpm", release.rpm.size]] as const)
+              box.querySelector(`[data-size="${kind}"]`)!.textContent = ` · ${formatSize(n)}`;
+            box.querySelector(".linux .meta")!.textContent = `Version ${release.version} · free`;
             box.querySelector<HTMLElement>("[data-packages]")!.hidden = false;
+            box.querySelector<HTMLElement>("[data-single]")!.hidden = true;
           }
         }
       })
       .catch(() => {}); // the buttons still go to the releases page
+  }
+
+  // The Linux menu closes when you pick something, tap elsewhere or press Escape.
+  for (const pick of document.querySelectorAll<HTMLDetailsElement>("details.pick")) {
+    pick.addEventListener("click", (e) => { if ((e.target as Element).closest(".menu a")) pick.open = false; });
+    document.addEventListener("click", (e) => { if (!pick.contains(e.target as Node)) pick.open = false; });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") pick.open = false; });
   }
 </script>
 
@@ -69,5 +95,22 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
   .other { font-size: 14px; }
   .other a { color: var(--accent); font-weight: 600; }
   .linux, :global(:root[data-os="linux"]) .windows { display: none; }
+  [hidden] { display: none !important; }
+
+  .pick { position: relative; }
+  .pick summary { list-style: none; cursor: pointer; user-select: none; }
+  .pick summary::-webkit-details-marker { display: none; }
+  .chevron { margin-left: -2px; transition: transform 0.15s ease; }
+  .pick[open] .chevron { transform: rotate(180deg); }
+  .menu {
+    position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 5;
+    min-width: 100%; width: max-content; margin: 0; padding: 6px; list-style: none;
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow);
+  }
+  .menu a { display: flex; flex-direction: column; gap: 1px; padding: 9px 14px; border-radius: 12px; text-decoration: none; text-align: left; }
+  .menu a:hover, .menu a:focus-visible { background: var(--chip); outline: none; }
+  .menu b { color: var(--accent); font-size: 16px; }
+  .menu span { color: var(--muted); font-size: 14px; }
+  @media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
   :global(:root[data-os="linux"]) .linux { display: flex; }
 </style>
