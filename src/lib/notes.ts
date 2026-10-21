@@ -25,6 +25,8 @@ export interface Latest {
   url: string; // the installer
   size: number;
   linux?: { url: string; size: number }; // the AppImage, from the same release
+  deb?: { url: string; size: number; name: string }; // packages for Ubuntu/Debian and Fedora/openSUSE,
+  rpm?: { url: string; size: number; name: string }; // from releases since they were added
 }
 
 export interface GhAsset {
@@ -81,12 +83,18 @@ export function latestOf(all: GhRelease[]): Latest | null {
     const exe = r.assets.find((a) => a.name.toLowerCase().endsWith(".exe") && a.name.toLowerCase().includes("setup"));
     if (!exe) continue;
     const image = r.assets.find((a) => a.name.toLowerCase().endsWith(".appimage"));
+    const pkg = (ext: string) => {
+      const a = r.assets.find((a) => a.name.toLowerCase().endsWith(ext));
+      return a && { url: a.browser_download_url, size: a.size, name: a.name };
+    };
     return {
       version: r.tag_name.replace(/^v/, ""),
       date: r.published_at.slice(0, 10),
       url: exe.browser_download_url,
       size: exe.size,
       linux: image && { url: image.browser_download_url, size: image.size },
+      deb: pkg(".deb"),
+      rpm: pkg(".rpm"),
     };
   }
   return null;

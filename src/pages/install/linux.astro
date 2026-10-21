@@ -7,24 +7,39 @@ import { RELEASES_PAGE, formatSize, latest } from "../../lib/releases";
 const release = await latest();
 const url = release?.linux?.url ?? RELEASES_PAGE;
 const app = "~/Applications/Nyanga-x86_64.AppImage";
+// The .deb and .rpm only exist from the release that added them; until then the page skips them.
+const deb = release?.deb;
+const rpm = release?.rpm;
+const packages = Boolean(deb && rpm);
 ---
 
 <Docs
   title="Installing Nyanga on Linux"
-  description="Run Nyanga, the cozy manga downloader, on Linux: download the AppImage, make it runnable, and add it to your app menu. Commands you can copy included."
+  description="Run Nyanga, the cozy manga downloader, on Linux: the AppImage, or a .deb for Ubuntu and Debian or an .rpm for Fedora. Commands you can copy included."
   heading="On Linux"
-  lead={`Most 64-bit Linux systems from the last few years${release?.linux ? ` · version ${release.version} · ${formatSize(release.linux.size)}` : ""}`}
+  lead={`Most 64-bit Linux systems from the last few years${release?.linux ? ` · version ${release.version}` : ""}`}
   sections={[
-    { id: "install", title: "Installing it" },
+    ...(packages ? [{ id: "which", title: "Which one?" }] : []),
+    { id: "appimage", title: "The AppImage" },
+    ...(packages ? [{ id: "deb", title: "Ubuntu, Debian, Mint" }, { id: "rpm", title: "Fedora, openSUSE" }] : []),
     { id: "updates", title: "Updates" },
     { id: "trouble", title: "If it won't start" },
     { id: "remove", title: "Removing it" },
   ]}
 >
-  <h2 id="install">Installing it</h2>
+  {packages && (
+    <>
+      <h2 id="which">Which one?</h2>
+      <div class="box">
+        <p><b>The AppImage</b> is one file that runs on almost any Linux, with nothing to install. <b>The .deb or .rpm</b> installs Nyanga like your other apps, so it's in your app menu right away. Either way Nyanga updates itself, so pick whichever you like.</p>
+      </div>
+    </>
+  )}
+
+  <h2 id="appimage">The AppImage</h2>
   <ol class="steps">
     <Step title="Download the AppImage">
-      <p>Get it here: <a href={url}>Nyanga-x86_64.AppImage</a>. That one file is the whole app, so there's nothing to install.</p>
+      <p>Get it here: <a href={url}>Nyanga-x86_64.AppImage</a>{release?.linux && ` (${formatSize(release.linux.size)})`}. That one file is the whole app.</p>
     </Step>
     <Step title="Give it a home and let it run">
       <p>Move it somewhere it can stay, like an <b>Applications</b> folder in your home, and allow it to run. In most file managers that's right-click → <b>Properties</b> → <b>Permissions</b>, then tick <b>Allow executing file as program</b> (KDE calls it <b>Is executable</b>). Or paste this into a terminal, which does all of it:</p>
@@ -37,9 +52,43 @@ const app = "~/Applications/Nyanga-x86_64.AppImage";
     </Step>
   </ol>
 
+  {packages && deb && rpm && (
+    <>
+      <h2 id="deb">Ubuntu, Debian, Mint</h2>
+      <ol class="steps">
+        <Step title="Download the .deb">
+          <p>Get it here: <a href={deb.url}>{deb.name}</a> ({formatSize(deb.size)}).</p>
+        </Step>
+        <Step title="Install it">
+          <p>Double-click it to open it in your software center and press <b>Install</b>, or paste this into a terminal:</p>
+          <Command code={`sudo apt install ~/Downloads/${deb.name}`} />
+        </Step>
+        <Step title="Open it">
+          <p>Find <b>Nyanga</b> in your app menu ✦</p>
+        </Step>
+      </ol>
+
+      <h2 id="rpm">Fedora, openSUSE</h2>
+      <ol class="steps">
+        <Step title="Download the .rpm">
+          <p>Get it here: <a href={rpm.url}>{rpm.name}</a> ({formatSize(rpm.size)}).</p>
+        </Step>
+        <Step title="Install it">
+          <p>Double-click it to open it in your software center and press <b>Install</b>, or paste the line for your system into a terminal:</p>
+          <Command code={`sudo dnf install ~/Downloads/${rpm.name}`} label="Fedora" />
+          <Command code={`sudo zypper install ~/Downloads/${rpm.name}`} label="openSUSE" />
+        </Step>
+        <Step title="Open it">
+          <p>Find <b>Nyanga</b> in your app menu ✦</p>
+        </Step>
+      </ol>
+    </>
+  )}
+
   <h2 id="updates">Updates</h2>
   <div class="box">
-    <p>When there's a new version, Nyanga shows a little card. Press <b>Update now</b> and it swaps in the new AppImage and opens again. That only works if it can write to its folder, so keep it somewhere in your home.</p>
+    <p>When there's a new version, Nyanga shows a little card. Press <b>Update now</b> and it updates itself and opens again, no password needed.</p>
+    <p>The AppImage swaps in the new file, so keep it somewhere in your home. {packages && "The .deb and .rpm keep their updates in your own folder, so your system's updater will keep showing the version you first installed. That's fine: Nyanga always opens the newest one."}</p>
   </div>
 
   <h2 id="trouble">If it won't start</h2>
@@ -50,8 +99,15 @@ const app = "~/Applications/Nyanga-x86_64.AppImage";
 
   <h2 id="remove">Removing it</h2>
   <div class="box">
-    <p>In Nyanga's <b>Settings</b>, take it out of the app menu, then delete the AppImage. Your downloaded manga stay where they are.</p>
-    <p>To remove your library and settings too:</p>
+    <p><b>The AppImage:</b> in Nyanga's <b>Settings</b>, take it out of the app menu, then delete the file.</p>
+    {packages && (
+      <>
+        <p><b>The .deb or .rpm:</b> remove it like any other app:</p>
+        <Command code="sudo apt remove nyanga" label="Ubuntu, Debian, Mint" />
+        <Command code="sudo dnf remove nyanga" label="Fedora" />
+      </>
+    )}
+    <p>Your downloaded manga stay where they are. To remove your library, settings{packages && " and Nyanga's updates"} too:</p>
     <Command code="rm -r ~/.local/share/Nyanga ~/.config/Nyanga" />
   </div>
 </Docs>

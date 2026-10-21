@@ -26,6 +26,10 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
       Download for Linux
     </a>
     <p class="meta">{linuxMeta}</p>
+    <p class="meta other" data-packages hidden={!(release?.deb && release?.rpm)}>
+      Or as a <a data-deb href={release?.deb?.url ?? RELEASES_PAGE}>.deb</a> (Ubuntu, Debian)
+      or <a data-rpm href={release?.rpm?.url ?? RELEASES_PAGE}>.rpm</a> (Fedora)
+    </p>
     <p class="meta other">On Windows? <a data-windows href={release?.url ?? RELEASES_PAGE}>Get the installer</a></p>
   </div>
 </div>
@@ -48,6 +52,11 @@ const linuxMeta = release?.linux ? `Version ${release.version} · ${formatSize(r
           if (!release.linux) continue;
           for (const a of box.querySelectorAll<HTMLAnchorElement>("[data-linux]")) a.href = release.linux.url;
           box.querySelector(".linux .meta")!.textContent = `Version ${release.version} · ${formatSize(release.linux.size)} · free`;
+          if (release.deb && release.rpm) {
+            box.querySelector<HTMLAnchorElement>("[data-deb]")!.href = release.deb.url;
+            box.querySelector<HTMLAnchorElement>("[data-rpm]")!.href = release.rpm.url;
+            box.querySelector<HTMLElement>("[data-packages]")!.hidden = false;
+          }
         }
       })
       .catch(() => {}); // the buttons still go to the releases page

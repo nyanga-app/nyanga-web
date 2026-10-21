@@ -19,7 +19,9 @@ const ways = [
     href: "/install/linux/",
     icon: "download",
     title: "Linux",
-    text: "One AppImage file that runs on most Linux systems. Nothing to install, and it updates itself.",
+    text: release?.deb && release?.rpm
+      ? "An AppImage that runs on most Linux systems, or a .deb or .rpm package. It updates itself either way."
+      : "One AppImage file that runs on most Linux systems. Nothing to install, and it updates itself.",
     meta: release?.linux ? `Version ${release.version} · ${formatSize(release.linux.size)}` : "",
   },
   {
