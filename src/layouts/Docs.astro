@@ -65,7 +65,7 @@ const next = PAGES[at + 1];
 
   .side { position: sticky; top: 88px; }
   .side-title { margin: 0 0 10px 12px; color: var(--muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-  .side ul { list-style: none; margin: 0; padding: 0; }
+  .side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
   .side a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 14px; color: var(--text); font-weight: 500; text-decoration: none; }
   .side a:hover { background: var(--chip); color: var(--accent); }
   .side a[aria-current="page"] { background: var(--chip); color: var(--accent); font-weight: 600; }
