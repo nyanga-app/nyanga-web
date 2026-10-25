@@ -94,7 +94,7 @@ Every push to `main` is built and published by Cloudflare (Workers with static a
 | Step | What runs |
 |------|-----------|
 | Build | `npm run build` |
-| Deploy | `npx wrangler deploy`, which serves `dist/` as set in `wrangler.jsonc`; `worker.js` runs first and redirects the old workers.dev address to nyanga.page |
+| Deploy | `npx wrangler deploy`, which serves `dist/` as set in `wrangler.jsonc`; `worker.js` runs first and redirects the old workers.dev address and plain `http://` to https://nyanga.page |
 
 A `GITHUB_TOKEN` build variable in Cloudflare (a read-only token for public repos) keeps GitHub
 from rate-limiting the builds. It's optional; without it the site still works.
