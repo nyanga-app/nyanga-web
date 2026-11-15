@@ -127,6 +127,8 @@ class Site:
     def __init__(self, key: str = "example:cozy-cat-diaries"):
         self.key = key
         self.title_url = "https://example.com/cozy-cat-diaries"
+        self.sources = {self.name: self.title_url}  # where the title was found, kept in its library entry
+        self.missing: list[str] = []
 
 
 # ---------------------------------------------------------------- helpers
