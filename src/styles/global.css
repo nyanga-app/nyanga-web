@@ -89,14 +89,14 @@ h2 { font-size: clamp(26px, 4vw, 34px); color: var(--accent); text-align: center
   gap: 10px;
   padding: 14px 28px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--primary-a), var(--primary-b));
+  background: var(--primary-b);
   color: #fff;
   font-weight: 700;
   font-size: 19px;
   text-decoration: none;
   transition: transform 0.15s ease;
 }
-.button:hover { color: #fff; transform: translateY(-2px); }
+.button:hover { color: #fff; background: var(--primary-hover); transform: translateY(-2px); }
 .button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
